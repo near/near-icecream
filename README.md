@@ -13,7 +13,7 @@
 3. install yarn 
 4. add config.js and gulpfile file
 5. edit index.html
-6. edit main.js
+6. edit index.js
 
 ## Template for NEAR dapps
 ### Requirements

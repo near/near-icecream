@@ -1,20 +1,20 @@
 import React from 'react';
 import ReactDOM from 'react-dom';
 import App from './App';
-
-import "./config.js"
+import './config.js'
+import * as nearlib from 'nearlib';
 
 async function doInitContract() {
     // window.near = await nearlib.dev.connect(nearConfig);
     // nearConfig.nodeUrl = 'https://rpc.nearprotocol.com';
     // nearConfig.helperUrl = 'https://near-contract-helper.onrender.com';
-    console.log("nearConfig", nearConfig);
+    console.log("nearConfig", window.nearConfig);
     // const walletBaseUrl = 'https://wallet.nearprotocol.com';
     // window.walletAccount = new nearlib.WalletAccount(nearConfig.contractName, walletBaseUrl);
 
     // New version for nearlib
     // Initializing connection to the NEAR node.
-    window.near = await nearlib.connect(Object.assign(nearConfig, { deps: { keyStore: new nearlib.keyStores.BrowserLocalStorageKeyStore() } }));
+    window.near = await nearlib.connect(Object.assign(window.nearConfig, { deps: { keyStore: new nearlib.keyStores.BrowserLocalStorageKeyStore() } }));
     // Needed to access wallet login
     window.walletAccount = new nearlib.WalletAccount(window.near);
 
@@ -29,25 +29,17 @@ async function doInitContract() {
     //   new nearlib.LocalNodeConnection(nearConfig.nodeUrl),
     // ));
 
-    window.contract = await near.loadContract(nearConfig.contractName, {
+    window.contract = await window.near.loadContract(window.nearConfig.contractName, {
         viewMethods: [
-            "totalSupply",
-            "balanceOf",
-            "allowance",
-            "ownerOf",
-            "name",
-            "symbol",],
+            "hello"],
         changeMethods: [
-            "init",
-            "approve",
-            "transferFrom",
-            "takeOwnership",],
+            ],
         sender: window.accountId
     });
 }
 
 window.nearInitPromise = doInitContract().then(() => {
-    ReactDOM.render(<App contract={contract} wallet={walletAccount}/>,
+    ReactDOM.render(<App contract={window.contract} wallet={window.walletAccount}/>,
       document.getElementById('root')
     );
-  }).catch(console.error)
+  }).catch(error=>console.log(error))

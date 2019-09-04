@@ -1,5 +1,5 @@
 (function() {
-    const CONTRACT_NAME = 'accountID'; /* TODO: fill this in!*/
+    const CONTRACT_NAME = 'react-template'; /* TODO: fill this in!*/
     const DEFAULT_ENV = 'development'; 
     
     function getConfig(env) {
@@ -42,7 +42,7 @@
                 throw Error(`Unconfigured environment '${env}'. Can be configured in src/config.js.`);
         }
     }
-
+    let Cookies = require('js-cookie');
     const cookieConfig = typeof Cookies != 'undefined' && Cookies.getJSON('fiddleConfig');
     if (typeof module !== 'undefined' && module.exports) {
         module.exports = getConfig;
