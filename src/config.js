@@ -1,5 +1,5 @@
 (function() {
-    const CONTRACT_NAME = 'react-template'; /* TODO: fill this in!*/
+    const CONTRACT_NAME = 'react'; /* TODO: fill this in!*/
     const DEFAULT_ENV = 'development'; 
     
     function getConfig(env) {
@@ -45,8 +45,10 @@
     let Cookies = require('js-cookie');
     const cookieConfig = typeof Cookies != 'undefined' && Cookies.getJSON('fiddleConfig');
     if (typeof module !== 'undefined' && module.exports) {
+        console.log("module works")
         module.exports = getConfig;
     } else {
+        console.log("Cookie works")
         window.nearConfig =  cookieConfig && cookieConfig.nearPages ? cookieConfig : getConfig(DEFAULT_ENV);
     }
 })();

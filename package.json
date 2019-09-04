@@ -6,7 +6,7 @@
     "bignum": "github:MaxGraey/bignum.wasm",
     "gulp": "^4.0.2",
     "js-cookie": "^2.2.1",
-    "near-shell": "^0.9.5",
+    "near-shell": "^0.10.4",
     "nearlib": "^0.13.1",
     "react": "^16.9.0",
     "react-dom": "^16.9.0",

@@ -1,18 +1,13 @@
 import React from 'react';
 import ReactDOM from 'react-dom';
 import App from './App';
-import './config.js'
+import getConfig from './config.js';
 import * as nearlib from 'nearlib';
 
 async function doInitContract() {
-    // window.near = await nearlib.dev.connect(nearConfig);
-    // nearConfig.nodeUrl = 'https://rpc.nearprotocol.com';
-    // nearConfig.helperUrl = 'https://near-contract-helper.onrender.com';
+    window.nearConfig = getConfig('development')
     console.log("nearConfig", window.nearConfig);
-    // const walletBaseUrl = 'https://wallet.nearprotocol.com';
-    // window.walletAccount = new nearlib.WalletAccount(nearConfig.contractName, walletBaseUrl);
 
-    // New version for nearlib
     // Initializing connection to the NEAR node.
     window.near = await nearlib.connect(Object.assign(window.nearConfig, { deps: { keyStore: new nearlib.keyStores.BrowserLocalStorageKeyStore() } }));
     // Needed to access wallet login
@@ -42,4 +37,4 @@ window.nearInitPromise = doInitContract().then(() => {
     ReactDOM.render(<App contract={window.contract} wallet={window.walletAccount}/>,
       document.getElementById('root')
     );
-  }).catch(error=>console.log(error))
+  }).catch(console.error)
