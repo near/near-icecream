@@ -1,68 +1,63 @@
-This project was bootstrapped with [Create React App](https://github.com/facebook/create-react-app).
+<br />
+<br />
 
-## Available Scripts
+<p>
+<img src="https://nearprotocol.com/wp-content/themes/near-19/assets/img/logo.svg?t=1553011311" width="240">
+</p>
 
-In the project directory, you can run:
+<br />
+<br />
 
-### `npm start`
+1. `npx create-react-app`
+2. add assembly directory
+3. install yarn 
+4. add config.js and gulpfile file
+5. edit index.html
+6. edit main.js
 
-Runs the app in the development mode.<br>
-Open [http://localhost:3000](http://localhost:3000) to view it in the browser.
+## Template for NEAR dapps
+### Requirements
+##### IMPORTANT: Make sure you have the latest version of NEAR Shell and Node Version > 10.x 
+1. node and npm
+2. near shell
+install with 
+```
+npm i -g near-shell
+```
+3.(optional) install yarn to build
+```
+npm i -g yarn
+```
 
-The page will reload if you make edits.<br>
-You will also see any lint errors in the console.
+### Features
+* Create NEAR dapps with a React frontend 🐲
+* We got Gulp! 💦
+* We got Corgis? [🐶](https://corgis.nearprotocol.com) 
 
-### `npm test`
+### To run on testnet
+Step 1: Create account for the contract and deploy the contract.
+In the terminal
+```
+near login
+```
+click the link and create your own contract ID
 
-Launches the test runner in the interactive watch mode.<br>
-See the section about [running tests](https://facebook.github.io/create-react-app/docs/running-tests) for more information.
+Step 2:
+modify src/config.js line that sets the contractName. Set it to id from step 1.
+```
+const CONTRACT_NAME = "contractId"; /* TODO: fill this in! */
+```
 
-### `npm run build`
+Step 3:
+Finally, run the command in your terminal.
+```
+npm(yarn) start
+```
+The server that starts is for static assets and by default serves them to localhost:5000. Navigate there in your browser to see the app running!
 
-Builds the app for production to the `build` folder.<br>
-It correctly bundles React in production mode and optimizes the build for the best performance.
+## To Explore
 
-The build is minified and the filenames include the hashes.<br>
-Your app is ready to be deployed!
-
-See the section about [deployment](https://facebook.github.io/create-react-app/docs/deployment) for more information.
-
-### `npm run eject`
-
-**Note: this is a one-way operation. Once you `eject`, you can’t go back!**
-
-If you aren’t satisfied with the build tool and configuration choices, you can `eject` at any time. This command will remove the single build dependency from your project.
-
-Instead, it will copy all the configuration files and the transitive dependencies (Webpack, Babel, ESLint, etc) right into your project so you have full control over them. All of the commands except `eject` will still work, but they will point to the copied scripts so you can tweak them. At this point you’re on your own.
-
-You don’t have to ever use `eject`. The curated feature set is suitable for small and middle deployments, and you shouldn’t feel obligated to use this feature. However we understand that this tool wouldn’t be useful if you couldn’t customize it when you are ready for it.
-
-## Learn More
-
-You can learn more in the [Create React App documentation](https://facebook.github.io/create-react-app/docs/getting-started).
-
-To learn React, check out the [React documentation](https://reactjs.org/).
-
-### Code Splitting
-
-This section has moved here: https://facebook.github.io/create-react-app/docs/code-splitting
-
-### Analyzing the Bundle Size
-
-This section has moved here: https://facebook.github.io/create-react-app/docs/analyzing-the-bundle-size
-
-### Making a Progressive Web App
-
-This section has moved here: https://facebook.github.io/create-react-app/docs/making-a-progressive-web-app
-
-### Advanced Configuration
-
-This section has moved here: https://facebook.github.io/create-react-app/docs/advanced-configuration
-
-### Deployment
-
-This section has moved here: https://facebook.github.io/create-react-app/docs/deployment
-
-### `npm run build` fails to minify
-
-This section has moved here: https://facebook.github.io/create-react-app/docs/troubleshooting#npm-run-build-fails-to-minify
+- `assembly/main.ts` for the contract code
+- `src/index.html` for the front-end HTML
+- `src/main.js` for the JavaScript front-end code and how to integrate contracts
+- `src/app.js` for the first react component
