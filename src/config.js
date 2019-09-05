@@ -1,5 +1,5 @@
 (function() {
-    const CONTRACT_NAME = 'react'; /* TODO: fill this in!*/
+    const CONTRACT_NAME = 'react-template'; /* TODO: fill this in!*/
     const DEFAULT_ENV = 'development'; 
     
     function getConfig(env) {
@@ -11,15 +11,24 @@
                     nodeUrl: 'https://rpc.nearprotocol.com',
                     contractName: CONTRACT_NAME,
                     walletUrl: 'https://wallet.nearprotocol.com',
-                    initialBalance: 1000000000000,
+                    initialBalance: 100000000,
+                };
+            case 'staging':
+                return {
+                    networkId: 'staging',
+                    nodeUrl: 'https://staging-rpc.nearprotocol.com/',
+                    contractName: CONTRACT_NAME,
+                    walletUrl: 'https://near-wallet-staging.onrender.com',
+                    initialBalance: 100000000,
                 };
             case 'local':
                 return {
                     networkId: 'local',
                     nodeUrl: 'http://localhost:3030',
-                    walletUrl: 'http://localhost:3000/wallet',
+                    keyPath: `${process.env.HOME}/.near/validator_key.json`,
+                    walletUrl: 'http://localhost:4000/wallet',
                     contractName: CONTRACT_NAME,
-                    initialBalance: 1000000000000,
+                    initialBalance: 100000000,
                 };
             case 'test':
                 return {
@@ -38,10 +47,19 @@
                     masterAccount: 'test.near',
                     initialBalance: 100000000,
                 };
+            case 'ci-staging':
+                return {
+                    networkId: 'shared-test-staging',
+                    nodeUrl: 'http://staging-shared-test.nearprotocol.com:3030',
+                    contractName: CONTRACT_NAME,
+                    masterAccount: 'test.near',
+                    initialBalance: 100000000,
+                };
             default:
                 throw Error(`Unconfigured environment '${env}'. Can be configured in src/config.js.`);
         }
     }
+    
     let Cookies = require('js-cookie');
     const cookieConfig = typeof Cookies != 'undefined' && Cookies.getJSON('fiddleConfig');
     if (typeof module !== 'undefined' && module.exports) {

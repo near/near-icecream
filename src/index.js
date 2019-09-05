@@ -26,7 +26,7 @@ async function doInitContract() {
 
     window.contract = await window.near.loadContract(window.nearConfig.contractName, {
         viewMethods: [
-            "hello"],
+            "hello",],
         changeMethods: [
             ],
         sender: window.accountId
