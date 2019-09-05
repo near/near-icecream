@@ -63,13 +63,18 @@ class App extends Component {
   }
 
   render() {
+    let style = {
+      fontSize: "1.5rem",
+      color: "#61dafb",
+      textShadow: "1px 1px #D3D3D3"
+    }
     return (
       <div className="App-header">
         <div className="image-wrapper">
           <img className="logo" src={nearlogo} alt="NEAR logo" />
           <p><span role="img" aria-label="fish">🐟</span> NEAR protocol is a new blockchain focused on developer productivity and useability!<span role="img" aria-label="fish">🐟</span></p>
           <p><span role="img" aria-label="chain">⛓</span> This little react app is connected to blockchain right now. <span role="img" aria-label="chain">⛓</span></p>
-          <p>{this.state.welcome}</p>
+          <p style={style}>{this.state.welcome}</p>
         </div>
         <div>
           {this.state.login ? <button onClick={this.requestSignOut}>Log out</button>
