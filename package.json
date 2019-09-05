@@ -4,6 +4,7 @@
   "private": true,
   "dependencies": {
     "bignum": "github:MaxGraey/bignum.wasm",
+    "gh-pages": "^2.1.1",
     "gulp": "^4.0.2",
     "js-cookie": "^2.2.1",
     "near-shell": "^0.10.4",
@@ -17,7 +18,9 @@
     "build:frontend": "react-scripts build",
     "test": "react-scripts test",
     "eject": "react-scripts eject",
-    "build:contract": "gulp build && near deploy"
+    "deploy:contract": "gulp build && near deploy",
+    "build": "react-scripts build && gulp build ",
+    "deploy:pages": "gh-pages -d build"
   },
   "eslintConfig": {
     "extends": "react-app"

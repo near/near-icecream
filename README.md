@@ -8,13 +8,6 @@
 <br />
 <br />
 
-1. `npx create-react-app`
-2. add assembly directory
-3. install yarn 
-4. add config.js and gulpfile file
-5. edit index.html
-6. edit index.js
-
 ## Template for NEAR dapps
 ### Requirements
 ##### IMPORTANT: Make sure you have the latest version of NEAR Shell and Node Version > 10.x 
