@@ -65,7 +65,7 @@ class App extends Component {
   render() {
     let style = {
       fontSize: "1.5rem",
-      color: "#61dafb",
+      color: "#0072CE",
       textShadow: "1px 1px #D3D3D3"
     }
     return (
@@ -82,7 +82,7 @@ class App extends Component {
         </div>
         <div>
           <div className="logo-wrapper">
-            <img src={near} className="App-logo" alt="logo" />
+            <img src={near} className="App-logo margin-logo" alt="logo" />
             <img src={logo} className="App-logo" alt="logo" />
           </div>
           <p>
