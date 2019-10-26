@@ -1,15 +1,16 @@
 import { near, context, storage, logging, base58, base64, PersistentMap, PersistentVector, PersistentDeque, PersistentTopN, ContractPromise, math } from "near-runtime-ts";
-// import { u128 } from "bignum";
-// import { TextMessage } from "./model";
+import { TextMessage } from "./model";
 
 const NAME = ". Welcome to NEAR Protocol chain"
 
-export function hello(name: string): string {
-  logging.log("hello test");
+export function welcome(name: string): TextMessage {
+  logging.log("simple welcome test");
+  let message = new TextMessage()
   const s = printString(NAME);
-  return "Hello, " + name + s;
+  message.text = "Welcome, " + name + s;
+  return message;
 }
 
-export function printString(s: string): string {
+function printString(s: string): string {
   return s;
 }
