@@ -1,4 +1,6 @@
-import { near, context, storage, logging, base58, base64, PersistentMap, PersistentVector, PersistentDeque, PersistentTopN, ContractPromise, math } from "near-runtime-ts";
+import { logging } from "near-runtime-ts";
+// available class: near, context, storage, logging, base58, base64, 
+// PersistentMap, PersistentVector, PersistentDeque, PersistentTopN, ContractPromise, math
 import { TextMessage } from "./model";
 
 const NAME = ". Welcome to NEAR Protocol chain"
