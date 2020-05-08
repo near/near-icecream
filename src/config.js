@@ -1,72 +1,69 @@
-(function() {
-    const CONTRACT_NAME = 'react-template'; /* TODO: fill this in!*/
-    const DEFAULT_ENV = 'development'; 
-    
-    function getConfig(env) {
-        switch (env) {
-            case 'production':
-            case 'development':
-                return {
-                    networkId: 'default',
-                    nodeUrl: 'https://rpc.nearprotocol.com',
-                    contractName: CONTRACT_NAME,
-                    walletUrl: 'https://wallet.nearprotocol.com',
-                    initialBalance: 100000000,
-                };
-            case 'staging':
-                return {
-                    networkId: 'staging',
-                    nodeUrl: 'https://staging-rpc.nearprotocol.com/',
-                    contractName: CONTRACT_NAME,
-                    walletUrl: 'https://near-wallet-staging.onrender.com',
-                    initialBalance: 100000000,
-                };
-            case 'local':
-                return {
-                    networkId: 'local',
-                    nodeUrl: 'http://localhost:3030',
-                    keyPath: `${process.env.HOME}/.near/validator_key.json`,
-                    walletUrl: 'http://localhost:4000/wallet',
-                    contractName: CONTRACT_NAME,
-                    initialBalance: 100000000,
-                };
-            case 'test':
-                return {
-                    networkId: 'local',
-                    nodeUrl: 'http://localhost:3030',
-                    contractName: CONTRACT_NAME,
-                    masterAccount: 'test.near',
-                    initialBalance: 100000000,
-                };
-            case 'test-remote':
-            case 'ci':
-                return {
-                    networkId: 'shared-test',
-                    nodeUrl: 'http://shared-test.nearprotocol.com:3030',
-                    contractName: CONTRACT_NAME,
-                    masterAccount: 'test.near',
-                    initialBalance: 100000000,
-                };
-            case 'ci-staging':
-                return {
-                    networkId: 'shared-test-staging',
-                    nodeUrl: 'http://staging-shared-test.nearprotocol.com:3030',
-                    contractName: CONTRACT_NAME,
-                    masterAccount: 'test.near',
-                    initialBalance: 100000000,
-                };
-            default:
-                throw Error(`Unconfigured environment '${env}'. Can be configured in src/config.js.`);
-        }
-    }
-    
-    let Cookies = require('js-cookie');
-    const cookieConfig = typeof Cookies != 'undefined' && Cookies.getJSON('fiddleConfig');
-    if (typeof module !== 'undefined' && module.exports) {
-        console.log("module works")
-        module.exports = getConfig;
-    } else {
-        console.log("Cookie works")
-        window.nearConfig =  cookieConfig && cookieConfig.nearPages ? cookieConfig : getConfig(DEFAULT_ENV);
-    }
-})();
+const CONTRACT_NAME = process.env.CONTRACT_NAME || "icecream.testnet";
+
+function getConfig(env) {
+  switch (env) {
+    case "production":
+    case "mainnet":
+      return {
+        networkId: "mainnet",
+        nodeUrl: "https://rpc.mainnet.near.org",
+        contractName: CONTRACT_NAME,
+        walletUrl: "https://wallet.mainnet.near.org",
+        helperUrl: "https://helper.mainnet.near.org",
+      };
+    case "development":
+    case "testnet":
+      return {
+        networkId: "default",
+        nodeUrl: "https://rpc.testnet.near.org",
+        contractName: CONTRACT_NAME,
+        walletUrl: "https://wallet.testnet.near.org",
+        helperUrl: "https://helper.testnet.near.org",
+      };
+    case "devnet":
+      return {
+        networkId: "devnet",
+        nodeUrl: "https://rpc.devnet.near.org",
+        contractName: CONTRACT_NAME,
+        walletUrl: "https://wallet.devnet.near.org",
+        helperUrl: "https://helper.devnet.near.org",
+      };
+    case "betanet":
+      return {
+        networkId: "betanet",
+        nodeUrl: "https://rpc.betanet.near.org",
+        contractName: CONTRACT_NAME,
+        walletUrl: "https://wallet.betanet.near.org",
+        helperUrl: "https://helper.betanet.near.org",
+      };
+    case "local":
+      return {
+        networkId: "local",
+        nodeUrl: "http://localhost:3030",
+        keyPath: `${process.env.HOME}/.near/validator_key.json`,
+        walletUrl: "http://localhost:4000/wallet",
+        contractName: CONTRACT_NAME,
+      };
+    case "test":
+    case "ci":
+      return {
+        networkId: "shared-test",
+        nodeUrl: "https://rpc.ci-testnet.near.org",
+        contractName: CONTRACT_NAME,
+        masterAccount: "test.near",
+      };
+    case "ci-betanet":
+      return {
+        networkId: "shared-test-staging",
+        nodeUrl: "https://rpc.ci-betanet.near.org",
+        contractName: CONTRACT_NAME,
+        masterAccount: "test.near",
+      };
+    default:
+      throw Error(
+        `Unconfigured environment '${env}'. Can be configured in src/config.js.`
+      );
+  }
+}
+
+module.exports = getConfig;

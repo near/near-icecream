@@ -2,11 +2,11 @@ import React from 'react';
 import ReactDOM from 'react-dom';
 import App from './App';
 import getConfig from './config.js';
-import * as nearlib from 'nearlib';
+import * as nearlib from 'near-api-js';
 
 // Initializing contract
-async function InitContract() {
-    window.nearConfig = getConfig('development')
+async function initContract() {
+    window.nearConfig = getConfig(process.env.NODE_ENV || 'development')
     console.log("nearConfig", window.nearConfig);
 
     // Initializing connection to the NEAR DevNet.
@@ -19,18 +19,19 @@ async function InitContract() {
     window.accountId = window.walletAccount.getAccountId();
 
     // Initializing our contract APIs by contract name and configuration.
-    window.contract = await window.near.loadContract(window.nearConfig.contractName, {
+    let acct = await new nearlib.Account(window.near.connection, window.accountId);
+    window.contract = await new nearlib.Contract(acct, window.nearConfig.contractName, {
         // View methods are read only. They don't modify the state, but usually return some value.
-        viewMethods: ['welcome',],
-            // Change methods can modify the state. But you don't receive the returned value when called.
-        changeMethods: [],
+        viewMethods: ['welcome'],
+        // Change methods can modify the state. But you don't receive the returned value when called.
+        changeMethods: ['setGreeting'],
         // Sender is the account ID to initialize transactions.
         sender: window.accountId
     });
 }
 
-window.nearInitPromise = InitContract().then(() => {
-    ReactDOM.render(<App contract={window.contract} wallet={window.walletAccount}/>,
-      document.getElementById('root')
-    );
-  }).catch(console.error)
+window.nearInitPromise = initContract().then(() => {
+  ReactDOM.render(<App contract={window.contract} wallet={window.walletAccount} />,
+    document.getElementById('root')
+  );
+}).catch(console.error)
