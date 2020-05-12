@@ -1,26 +1,67 @@
-import { context, logging, storage } from "near-sdk-as";
-// available class: context, storage, logging, base58, base64, 
-// PersistentMap, PersistentVector, PersistentDeque, PersistentTopN, ContractPromise, math
-import { TextMessage } from "./model";
+import {
+  iceCream,
+  PostOrder,
+  orders,
+  OrderList,
+  ordersByOwner,
+  displayOrders,
+} from "./model";
+import { logging } from "near-sdk-as";
 
-const DEFAULT_MESSAGE = "Hello"
+// --- contract code goes below
 
-export function welcome(account_id: string): TextMessage {
-  logging.log("simple welcome test");
-  let message = new TextMessage();
-  let greetingPrefix = storage.get<string>(account_id);
-  if (!greetingPrefix) {
-    greetingPrefix = DEFAULT_MESSAGE;
+// The maximum number of latest orders the contract returns.
+const ORDER_LIMIT = 10;
+
+// method for collections
+export function setOrder(
+  owner: string,
+  postNumber: string,
+  iceCream: iceCream
+): void {
+  // Creating a new message and populating fields with our data
+  const newiceCream = new PostOrder(iceCream);
+  // Adding the message to end of the the persistent collection
+  orders.set(postNumber, newiceCream);
+  displayOrders.push(newiceCream);
+  setOrderByOwner(owner, postNumber);
+}
+
+export function displayGolbalOrders(): PostOrder[] {
+  const numMessages = min(ORDER_LIMIT, displayOrders.length);
+  const startIndex = displayOrders.length - numMessages;
+  const result = new Array<PostOrder>(numMessages);
+  for (let i = 0; i < numMessages; i++) {
+    result[i] = displayOrders[i + startIndex];
   }
-  const s = printString(account_id);
-  message.text = greetingPrefix + " " + s;
-  return message;
+  return result;
 }
 
-export function setGreeting(message: string): void {
-  storage.set(context.sender, message);
+// method for owner
+export function getOrderByOwner(owner: string): Array<string> {
+  let orderList = ordersByOwner.get(owner);
+  if (!orderList) {
+    return new Array<string>();
+  }
+  return orderList.postNumber;
 }
 
-function printString(s: string): string {
-  return s;
+export function setOrderByOwner(owner: string, postNumber: string): void {
+  let orderList = getOrderByOwner(owner);
+  orderList.push(postNumber);
+  let newOrderList = new OrderList(orderList);
+  ordersByOwner.set(owner, newOrderList);
+}
+
+export function getIcecreamsByOwner(owner: string): PostOrder[] {
+  logging.log("get icecream");
+  let orderList = getOrderByOwner(owner);
+  let iceCreamList = new Array<PostOrder>();
+  for (let i = 0; i < orderList.length; i++) {
+    if (orders.contains(orderList[i])) {
+      let iceCream = orders.getSome(orderList[i]);
+      iceCreamList.push(iceCream);
+    }
+  }
+  return iceCreamList;
 }
