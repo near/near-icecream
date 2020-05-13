@@ -10,6 +10,7 @@ import asyncComponent from "./components/Utils/hoc/asyncComponent";
 import Layout from "./components/Utils/hoc/Layout";
 import iceCreamBuilder from "./containers/iceCreamBuilder/iceCreamBuilder";
 import Logout from "./containers/Auth/Logout/Logout";
+import Auth from "./containers/Auth/Auth";
 
 const asyncCheckout = asyncComponent(() => {
   return import("./containers/Checkout/Checkout");
@@ -17,10 +18,6 @@ const asyncCheckout = asyncComponent(() => {
 
 const asyncOrders = asyncComponent(() => {
   return import("./containers/Orders/Orders");
-});
-
-const asyncAuth = asyncComponent(() => {
-  return import("./containers/Auth/Auth");
 });
 
 class App extends Component {
@@ -31,7 +28,7 @@ class App extends Component {
   render() {
     let routes = (
       <Switch>
-        <Route path="/auth" component={asyncAuth} />
+        <Route path="/auth" component={Auth} />
         <Route path="/" exact component={iceCreamBuilder} />
         <Redirect to="/" />
       </Switch>
@@ -43,7 +40,7 @@ class App extends Component {
           <Route path="/checkout" component={asyncCheckout} />
           <Route path="/orders" component={asyncOrders} />
           <Route path="/logout" component={Logout} />
-          <Route path="/auth" component={asyncAuth} />
+          <Route path="/auth" component={Auth} />
           <Route path="/" exact component={iceCreamBuilder} />
           <Redirect to="/" />
         </Switch>

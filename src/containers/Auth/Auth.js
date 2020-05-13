@@ -58,7 +58,7 @@ class Auth extends Component {
 const mapStateToProps = (state) => {
   return {
     isAuthenticated: !!state.auth.currentUser,
-    building: state.burgerBuilder.building,
+    building: state.iceCreamBuilder.building,
     authRedirectPath: state.auth.authRedirectPath,
   };
 };

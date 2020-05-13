@@ -20,8 +20,8 @@ export const LogIn = (currentUser) => {
 };
 
 export const authCheckState = () => {
-  return (dispatch, state) => {
-    const currentUser = state.auth.currentUser;
+  return (dispatch) => {
+    const currentUser = window.currentUser;
     if (!currentUser) {
       dispatch(LogOut());
     } else {

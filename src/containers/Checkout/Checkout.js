@@ -52,9 +52,9 @@ class Checkout extends Component {
 
 const mapStateToProps = (state) => {
   return {
-    species: state.burgerBuilder.species,
-    sides: state.burgerBuilder.sides,
-    price: state.burgerBuilder.totalPrice,
+    species: state.iceCreamBuilder.species,
+    sides: state.iceCreamBuilder.sides,
+    price: state.iceCreamBuilder.totalPrice,
     currentUser: state.auth.currentUser,
     purchased: state.order.purchased,
   };

@@ -7,7 +7,7 @@ import thunk from "redux-thunk";
 
 import App from "./App";
 
-import icecreamBuilder from "./store/reducers/icecreamBuilder";
+import icecreamBuilderReducer from "./store/reducers/icecreamBuilder";
 import orderReducer from "./store/reducers/order";
 import authReducer from "./store/reducers/auth";
 
@@ -30,7 +30,7 @@ async function initContract() {
   );
 
   // Needed to access wallet
-  const walletConnection = new nearAPI.WalletConnection(near);
+  const walletConnection = new nearlib.WalletConnection(near);
   window.wallet = walletConnection;
 
   // Load in account data
@@ -63,7 +63,7 @@ window.nearInitPromise = initContract()
     const composeEnhancers =
       window.__REDUX_DEVTOOLS_EXTENSION_COMPOSE__ || compose;
     const rootReducer = combineReducers({
-      burgerBuilder: icecreamBuilder,
+      iceCreamBuilder: icecreamBuilderReducer,
       order: orderReducer,
       auth: authReducer,
     });

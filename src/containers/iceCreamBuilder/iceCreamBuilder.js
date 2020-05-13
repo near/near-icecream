@@ -2,12 +2,12 @@ import React, { Component } from "react";
 import { connect } from "react-redux";
 import * as actions from "../../store/actions/index";
 
-import iceCream from "../../components/iceCream/iceCream";
+import IceCream from "../../components/iceCream/iceCream";
 import BuildControls from "../../components/iceCream/BuildControls/BuildControls";
 import Modal from "../../components/Utils/Button";
 import OrderSummary from "../../components/iceCream/OrderSummary/OrderSummary";
 
-class BurgerBuilder extends Component {
+class iceCreamBuilder extends Component {
   state = {
     purchasing: false,
   };
@@ -56,7 +56,7 @@ class BurgerBuilder extends Component {
           {orderSummary}
         </Modal>
         <>
-          <iceCream species={this.props.species} side={this.props.sides} />
+          <IceCream species={this.props.species} side={this.props.sides} />
           <BuildControls ordered={this.purchaseHandler} />
         </>
       </>
@@ -66,9 +66,9 @@ class BurgerBuilder extends Component {
 
 const mapStateToProps = (state) => {
   return {
-    species: state.burgerBuilder.species,
-    sides: state.burgerBuilder.sides,
-    price: state.burgerBuilder.totalPrice,
+    species: state.iceCreamBuilder.species,
+    sides: state.iceCreamBuilder.sides,
+    price: state.iceCreamBuilder.totalPrice,
     isAuthenticated: !!state.auth.currentUser,
   };
 };
@@ -81,4 +81,4 @@ const mapDispatchToProps = (dispatch) => {
   };
 };
 
-export default connect(mapStateToProps, mapDispatchToProps)(BurgerBuilder);
+export default connect(mapStateToProps, mapDispatchToProps)(iceCreamBuilder);

@@ -1,7 +1,7 @@
 import React, { Component } from "react";
 import { connect } from "react-redux";
 
-import flavorButton from "../../Utils/flavorButton";
+import FlavorButton from "../../Utils/FlavorButton";
 
 class BuildControls extends Component {
   sides = [
@@ -45,7 +45,7 @@ class BuildControls extends Component {
       </button>
     ));
     const flavorButtons = this.flavors.map((flavor) => (
-      <flavorButton
+      <FlavorButton
         key={flavor.label}
         added={() => this.addSpecies(flavor.type)}
         removed={() => this.removeSpecies(flavor.type)}
@@ -53,7 +53,7 @@ class BuildControls extends Component {
         selected={this.selectedHandler(flavor.type)}
       >
         {flavor.label}
-      </flavorButton>
+      </FlavorButton>
     ));
     const orderButton = (
       <button className="OrderButton" disabled={!purchasable} onClick={ordered}>
@@ -139,9 +139,9 @@ class BuildControls extends Component {
 
 const mapStateToProps = (state) => {
   return {
-    species: state.burgerBuilder.species,
-    price: state.burgerBuilder.totalPrice,
-    purchasable: state.burgerBuilder.purchasable,
+    species: state.iceCreamBuilder.species,
+    price: state.iceCreamBuilder.totalPrice,
+    purchasable: state.iceCreamBuilder.purchasable,
     isAuthenticated: !!state.auth.currentUser,
   };
 };
