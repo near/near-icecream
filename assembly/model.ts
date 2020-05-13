@@ -8,7 +8,7 @@ export class OrderList {
 export class iceCream {
   species: Array<string>;
   sides: Array<string>;
-  price: number;
+  price: u32;
 }
 @nearBindgen
 export class PostOrder {
