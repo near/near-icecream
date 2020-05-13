@@ -1,7 +1,7 @@
 import React from "react";
 
-export default ({ species, price }) => {
-  const ingredientOutput = species.map((ig) => {
+export default ({ species, sides, price }) => {
+  const FlavorOutput = species.map((ig) => {
     return (
       <span
         style={{
@@ -20,7 +20,8 @@ export default ({ species, price }) => {
 
   return (
     <div className="Order">
-      <p>Ingredients: {ingredientOutput}</p>
+      <p>Flavors: {FlavorOutput}</p>
+      <p>Side: {sides}</p>
       <p>
         Price: <strong>{price}Ⓝ</strong>
       </p>

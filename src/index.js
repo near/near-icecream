@@ -7,7 +7,7 @@ import thunk from "redux-thunk";
 
 import App from "./App";
 
-import burgerBuilderReducer from "./store/reducers/burgerBuilder";
+import icecreamBuilder from "./store/reducers/icecreamBuilder";
 import orderReducer from "./store/reducers/order";
 import authReducer from "./store/reducers/auth";
 
@@ -63,7 +63,7 @@ window.nearInitPromise = initContract()
     const composeEnhancers =
       window.__REDUX_DEVTOOLS_EXTENSION_COMPOSE__ || compose;
     const rootReducer = combineReducers({
-      burgerBuilder: burgerBuilderReducer,
+      burgerBuilder: icecreamBuilder,
       order: orderReducer,
       auth: authReducer,
     });

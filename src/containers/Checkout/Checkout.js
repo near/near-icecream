@@ -27,10 +27,7 @@ class Checkout extends Component {
           <div className="CheckoutSummary">
             <h1>Hope you enjoy it!</h1>
             <div style={{ width: "100%", margin: "auto" }}>
-              <Burger
-                ingredients={this.props.species}
-                side={this.props.sides}
-              />
+              <Burger species={this.props.species} side={this.props.sides} />
             </div>
             <Button btnType="Danger" clicked={this.checkoutCancelled}>
               CANCEL

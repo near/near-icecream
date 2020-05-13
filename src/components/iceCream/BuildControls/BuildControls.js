@@ -1,84 +1,85 @@
 import React, { Component } from "react";
 import { connect } from "react-redux";
 
-import flavorButton from "../../UI/flavorButton"
-
-const sides = [
-    { label: "chocolate", type="#7B3F00"},
-    { label: "mochi", type: "#AAD400"},
-    { label: "strawberry", type: "#E66363"}
-]
-const flavors = [
-  { label: "red", type: "#FAC8D3" },
-  { label: "purple", type: "#DD98E2" },
-  { label: "blue", type: "#C5D9EE" },
-  { label: "pink", type: "#F6ECF1" },
-  { label: "green", type: "#CEFFE9"}
-];
+import flavorButton from "../../Utils/flavorButton";
 
 class BuildControls extends Component {
+  sides = [
+    { label: "chocolate", type: "#7B3F00" },
+    { label: "mochi", type: "#AAD400" },
+    { label: "strawberry", type: "#E66363" },
+  ];
+  flavors = [
+    { label: "red", type: "#FAC8D3" },
+    { label: "purple", type: "#DD98E2" },
+    { label: "blue", type: "#C5D9EE" },
+    { label: "pink", type: "#F6ECF1" },
+    { label: "green", type: "#CEFFE9" },
+  ];
+
   selectedHandler = (type) => {
-    return this.props.species.some(s=> s===type)
-  }
+    return this.props.species.some((s) => s === type);
+  };
 
   addSpecies = (type) => {
-    this.props.ingredientAdded(type)
-    this.props.onCheckPurchasable(this.props.species)
-  }
+    this.props.ingredientAdded(type);
+    this.props.onCheckPurchasable(this.props.species);
+  };
 
   removeSpecies = (type) => {
-    this.props.ingredientRemoved(type)
-    this.props.onCheckPurchasable(this.props.species)
-  }
+    this.props.ingredientRemoved(type);
+    this.props.onCheckPurchasable(this.props.species);
+  };
 
-  render(){
+  render() {
     const {
       price,
       sideSelected,
       purchasable,
       ordered,
-      isAuthenticated
-    } = this.props
-    const sideButtons = sides.map(side => (
-                          <button 
-                          key={side.label} 
-                          onClick={sideSelected} >
-                              {side.label}
-                          </button>))
-    const flavorButtons = flavors.map(flavor => (
-                  <flavorButton
-                    key={flavor.label}
-                    added={() => this.addSpecies(flavor.type)}
-                    removed={() => this.removeSpecies(flavor.type)}
-                    disabled={purchasable}
-                    selected={this.selectedHandler(flavor.type)}
-                  >{flavor.label}</flavorButton>
-                ))
-    const orderButton = <button
-                        className="OrderButton"
-                        disabled={!purchasable}
-                        onClick={ordered}
-                      >
-                        ORDER NOW
-                      </button>
-    const buttonGroup = <>
-                          {sideButtons}
-                          {flavorButtons}
-                          {orderButton}
-                        </>
+      isAuthenticated,
+    } = this.props;
+    const sideButtons = this.sides.map((side) => (
+      <button key={side.label} onClick={sideSelected}>
+        {side.label}
+      </button>
+    ));
+    const flavorButtons = this.flavors.map((flavor) => (
+      <flavorButton
+        key={flavor.label}
+        added={() => this.addSpecies(flavor.type)}
+        removed={() => this.removeSpecies(flavor.type)}
+        disabled={purchasable}
+        selected={this.selectedHandler(flavor.type)}
+      >
+        {flavor.label}
+      </flavorButton>
+    ));
+    const orderButton = (
+      <button className="OrderButton" disabled={!purchasable} onClick={ordered}>
+        ORDER NOW
+      </button>
+    );
+    const buttonGroup = (
+      <>
+        {sideButtons}
+        {flavorButtons}
+        {orderButton}
+      </>
+    );
     return (
-    <div className="BuildControl">
-      <p>
-        Current Price: <strong>{price}</strong>
-      </p>
-          {isAuthenticated ? buttonGroup 
-          : (<button
-              disabled={!purchasable}
-              onClick={ordered}
-            >
-              Please Log in to order yummy ice cream
-            </button>)}
-      <style>{`
+      <div className="BuildControl">
+        <p>
+          Current Price: <strong>{price}</strong>
+        </p>
+        {isAuthenticated ? (
+          buttonGroup
+        ) : (
+          <button disabled={!purchasable} onClick={ordered}>
+            Please Log in to order yummy ice cream
+          </button>
+        )}
+        <style>{`
           .BuildControls {
               width: 100%;
               background-color: #CF8F2E;
@@ -131,7 +132,8 @@ class BuildControls extends Component {
               }
           }
           `}</style>
-    </div>)
+      </div>
+    );
   }
 }
 
@@ -150,10 +152,11 @@ const mapDispatchToProps = (dispatch) => {
     onIngredientRemoved: (ingName) => dispatch(actions.removeSpecies(ingName)),
     onInitIngredients: () => dispatch(actions.setInital()),
     onSelectSides: (side) => dispatch(actions.setSides(side)),
-    onCheckPurchasable: (speciesList) => dispatch(actions.checkPurchasable(speciesList)),
+    onCheckPurchasable: (speciesList) =>
+      dispatch(actions.checkPurchasable(speciesList)),
     onInitPurchase: () => dispatch(actions.purchaseInit()),
     setPath: (path) => dispatch(actions.setRedirectPath(path)),
   };
 };
-  
-export default connect(mapStateToProps, mapDispatchToProps)(BuildControls)
+
+export default connect(mapStateToProps, mapDispatchToProps)(BuildControls);

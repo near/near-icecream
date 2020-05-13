@@ -2,10 +2,10 @@ import React, { Component } from "react";
 import { connect } from "react-redux";
 import * as actions from "../../store/actions/index";
 
-import Burger from "../../components/Burger/Burger";
-import BuildControls from "../../components/Burger/BuildControls/BuildControls";
-import Modal from "../../components/UI/Modal/Modal";
-import OrderSummary from "../../components/Burger/OrderSummary/OrderSummary";
+import iceCream from "../../components/iceCream/iceCream";
+import BuildControls from "../../components/iceCream/BuildControls/BuildControls";
+import Modal from "../../components/Utils/Button";
+import OrderSummary from "../../components/iceCream/OrderSummary/OrderSummary";
 
 class BurgerBuilder extends Component {
   state = {
@@ -36,10 +36,10 @@ class BurgerBuilder extends Component {
 
   render() {
     let orderSummary;
-    if (this.props.ings) {
+    if (this.props.species) {
       orderSummary = (
         <OrderSummary
-          ingredients={this.props.ings}
+          species={this.props.species}
           side={this.props.sides}
           price={this.props.price}
           purchaseCancelled={this.purchaseCancelHandler}
@@ -56,7 +56,7 @@ class BurgerBuilder extends Component {
           {orderSummary}
         </Modal>
         <>
-          <Burger species={this.props.ings} side={this.props.sides} />
+          <iceCream species={this.props.species} side={this.props.sides} />
           <BuildControls ordered={this.purchaseHandler} />
         </>
       </>
@@ -66,7 +66,7 @@ class BurgerBuilder extends Component {
 
 const mapStateToProps = (state) => {
   return {
-    ings: state.burgerBuilder.species,
+    species: state.burgerBuilder.species,
     sides: state.burgerBuilder.sides,
     price: state.burgerBuilder.totalPrice,
     isAuthenticated: !!state.auth.currentUser,

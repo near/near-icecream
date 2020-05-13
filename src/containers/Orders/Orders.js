@@ -4,7 +4,7 @@ import * as actions from "../../store/actions/index";
 
 import Order from "../../components/Order/Order";
 
-import Spinner from "../../components/UI/Spinner/Spinner";
+import Spinner from "../../components/Utils/Spinner";
 
 class Orders extends Component {
   componentDidMount() {

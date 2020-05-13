@@ -2,9 +2,9 @@ import React, { Component } from "react";
 import { connect } from "react-redux";
 import { Redirect } from "react-router-dom";
 
-import Button from "../../components/UI/Button/Button";
 import * as actions from "../../store/actions/index";
 
+import Button from "../../components/Utils/Button";
 class Auth extends Component {
   componentDidMount() {
     if (!this.props.building && this.props.authRedirectPath !== "/") {

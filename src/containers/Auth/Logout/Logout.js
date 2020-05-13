@@ -4,7 +4,7 @@ import { connect } from "react-redux";
 
 import * as actions from "../../../store/actions/index";
 
-import Button from "../../components/UI/Button/Button";
+import Button from "../../../components/Utils/Button";
 
 class Logout extends Component {
   signedOutFlow = async () => {

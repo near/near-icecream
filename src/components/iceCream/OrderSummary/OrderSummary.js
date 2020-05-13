@@ -1,15 +1,15 @@
 import React from "react";
 
-import Button from "../../UI/Button/Button";
+import Button from "../../Utils/Button";
 
 export default ({
-  ingredients,
+  species,
   side,
   price,
   purchaseCancelled,
   purchaseContinued,
 }) => {
-  const ingredientSummary = ingredients.map((igKey) => {
+  const ingredientSummary = species.map((igKey) => {
     return <li key={igKey}>{igKey}</li>;
   });
 

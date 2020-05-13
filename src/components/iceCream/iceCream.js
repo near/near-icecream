@@ -8,8 +8,8 @@ export default ({ species, side }) => {
   console.log(side);
   return (
     <div className="wrapper">
-      <img src={iceCreamBall} />
-      <img src={iceCreamBox} />
+      <img src={iceCreamBall} style={{ width: "200px" }} />
+      <img src={iceCreamBox} style={{ width: "300px" }} />
       <style>{`
     .wrapper {
         width: 100%;

@@ -2,7 +2,7 @@ import React from "react";
 
 import Logo from "../../Logo/Logo";
 import NavigationItems from "../NavigationItems/NavigationItems";
-import Backdrop from "../../Utils/Backdrop/Backdrop";
+import Backdrop from "../../Utils/Backdrop";
 
 export default ({ open, closed, isAuth }) => (
   <>
