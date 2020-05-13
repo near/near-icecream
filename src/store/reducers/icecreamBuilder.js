@@ -59,15 +59,15 @@ const checkPurchasable = (state, action) => {
 
 const reducer = (state = initialState, action) => {
   switch (action.type) {
-    case actionTypes.ADD_INGREDIENT:
+    case actionTypes.ADD_SPECIES:
       return addSpecies(state, action);
-    case actionTypes.REMOVE_INGREDIENT:
+    case actionTypes.REMOVE_SPECIES:
       return removeSpecies(state, action);
     case actionTypes.SET_SIDES:
       return setSides(state, action);
     case actionTypes.CHECK_PURCHASABLE:
       return checkPurchasable(state, action);
-    case actionTypes.SET_INGREDIENTS:
+    case actionTypes.SET_SPECIES:
       return setInital(state);
     default:
       return state;

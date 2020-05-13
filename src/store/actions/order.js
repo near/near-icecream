@@ -8,13 +8,13 @@ export const purchaseInit = () => {
 
 const purchaseIceCreamSuccess = () => {
   return {
-    type: actionTypes.PURCHASE_BURGER_SUCCESS,
+    type: actionTypes.PURCHASE_BOX_SUCCESS,
   };
 };
 
 const purchaseIceCreamFail = (error) => {
   return {
-    type: actionTypes.PURCHASE_BURGER_FAIL,
+    type: actionTypes.PURCHASE_BOX_FAIL,
     error,
   };
 };

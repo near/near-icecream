@@ -2,21 +2,21 @@ import * as actionTypes from "./actionTypes";
 
 export const addSpecies = (speciesName) => {
   return {
-    type: actionTypes.ADD_INGREDIENT,
+    type: actionTypes.ADD_SPECIES,
     speciesName,
   };
 };
 
 export const removeSpecies = (speciesName) => {
   return {
-    type: actionTypes.REMOVE_INGREDIENT,
+    type: actionTypes.REMOVE_SPECIES,
     speciesName,
   };
 };
 
 export const setInital = () => {
   return {
-    type: actionTypes.SET_INGREDIENTS,
+    type: actionTypes.SET_SPECIES,
   };
 };
 
