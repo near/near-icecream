@@ -7,7 +7,7 @@ import DrawerToggle from "../SideDrawer/DrawerToggle/DrawerToggle";
 export default ({ drawerToggleClicked, isAuth }) => (
   <header className="Toolbar">
     <DrawerToggle clicked={drawerToggleClicked} />
-    <div className="Logo">
+    <div style={{ height: "80%" }}>
       <Logo />
     </div>
     <nav className="DesktopOnly">
@@ -31,10 +31,6 @@ export default ({ drawerToggleClicked, isAuth }) => (
 
         .Toolbar nav {
             height: 100%;
-        }
-
-        .Logo {
-            height: 80%;
         }
 
         @media (max-width: 499px) {

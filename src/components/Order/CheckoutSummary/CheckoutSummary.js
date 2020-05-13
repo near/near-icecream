@@ -2,19 +2,18 @@ import React from "react";
 
 import Burger from "../../Burger/Burger";
 import Button from "../../UI/Button/Button";
-import classes from "./CheckoutSummary.css";
 
-const checkoutSummary = (props) => {
+export default ({ species, checkoutCancelled, checkoutContinued }) => {
   return (
-    <div className={classes.CheckoutSummary}>
+    <div className="CheckoutSummary">
       <h1>We hope you enjoy it!</h1>
       <div style={{ width: "100%", margin: "auto" }}>
-        <Burger ingredients={props.ingredients} />
+        <Burger species={species} />
       </div>
-      <Button btnType="Danger" clicked={props.checkoutCancelled}>
+      <Button btnType="Danger" clicked={checkoutCancelled}>
         CANCEL
       </Button>
-      <Button btnType="Success" clicked={props.checkoutContinued}>
+      <Button btnType="Success" clicked={checkoutContinued}>
         CONTINUE
       </Button>
       <style>{`
@@ -27,5 +26,3 @@ const checkoutSummary = (props) => {
     </div>
   );
 };
-
-export default checkoutSummary;

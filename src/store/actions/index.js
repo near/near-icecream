@@ -4,7 +4,7 @@ export {
   setSides,
   setInital,
   checkPurchasable,
-} from "./burgerBuilder";
+} from "./icecreamBuilder";
 export {
   purchaseInit,
   purchaseIceCream,

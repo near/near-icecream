@@ -2,8 +2,8 @@ import React from "react";
 
 import Logo from "../../assets/ice_cream_logo.png";
 
-export default ({ height }) => (
-  <div className="Logo" style={{ height: height }}>
+export default () => (
+  <div className="Logo">
     <img src={Logo} alt="IceCream" />
     <style>{`
     .Logo {

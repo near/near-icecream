@@ -12,7 +12,7 @@ export default ({ open, closed, isAuth }) => (
       style={{ transform: open ? "translateX(0)" : " translateX(-100%)" }}
       onClick={closed}
     >
-      <div className="" Logo>
+      <div style={{ height: "11%", marginBotton: "32px" }}>
         <Logo />
       </div>
       <nav>
@@ -39,10 +39,6 @@ export default ({ open, closed, isAuth }) => (
               display: none;
           }
       }
-
-      .Logo {
-          height: 11%;
-          margin-bottom: 32px;
-      }`}</style>
+    `}</style>
   </>
 );
