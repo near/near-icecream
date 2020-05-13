@@ -7,7 +7,7 @@ import * as actions from "../../store/actions/index";
 
 class Auth extends Component {
   componentDidMount() {
-    if (!this.props.buildingBurger && this.props.authRedirectPath !== "/") {
+    if (!this.props.building && this.props.authRedirectPath !== "/") {
       this.props.setPath();
     }
     if (window.wallet.isSignedIn()) {
@@ -32,7 +32,25 @@ class Auth extends Component {
     }
 
     return (
-      <Button clicked={this.requestSignIn}>Lon In with NEAR Wallet</Button>
+      <Button clicked={this.requestSignIn}>
+        Log In with NEAR Wallet
+        <style>{`
+      .Auth {
+        margin: 20px auto;
+        width: 80%;
+        text-align: center;
+        box-shadow: 0 2px 3px #ccc;
+        border: 1px solid #eee;
+        padding: 10px;
+        box-sizing: border-box;
+    }
+    
+    @media (min-width: 600px) {
+        .Auth {
+            width: 500px;
+        }
+    }`}</style>
+      </Button>
     );
   }
 }
@@ -40,7 +58,7 @@ class Auth extends Component {
 const mapStateToProps = (state) => {
   return {
     isAuthenticated: !!state.auth.currentUser,
-    buildingBurger: state.burgerBuilder.building,
+    building: state.burgerBuilder.building,
     authRedirectPath: state.auth.authRedirectPath,
   };
 };

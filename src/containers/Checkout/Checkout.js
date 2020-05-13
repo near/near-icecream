@@ -1,46 +1,73 @@
-import React, { Component } from 'react';
-import { Route, Redirect } from 'react-router-dom';
-import { connect } from 'react-redux';
-
-import CheckoutSummary from '../../components/Order/CheckoutSummary/CheckoutSummary';
-import ContactData from './ContactData/ContactData';
+import React, { Component } from "react";
+import { Redirect } from "react-router-dom";
+import { connect } from "react-redux";
 
 class Checkout extends Component {
+  checkoutCancelledHandler = () => {
+    this.props.history.goBack();
+  };
+  checkoutHandler = () => {
+    const order = {
+      species: this.props.species,
+      sides: this.props.sides,
+      price: this.props.price,
+    };
+    this.props.onOrderBurger(this.props.currentUser.accountId, order);
+  };
 
-    checkoutCancelledHandler = () => {
-        this.props.history.goBack();
+  render() {
+    let summary = <Redirect to="/" />;
+    if (this.props.species) {
+      const purchasedRedirect = this.props.purchased ? (
+        <Redirect to="/" />
+      ) : null;
+      summary = (
+        <div>
+          {purchasedRedirect}
+          <div className="CheckoutSummary">
+            <h1>Hope you enjoy it!</h1>
+            <div style={{ width: "100%", margin: "auto" }}>
+              <Burger
+                ingredients={this.props.species}
+                side={this.props.sides}
+              />
+            </div>
+            <Button btnType="Danger" clicked={this.checkoutCancelled}>
+              CANCEL
+            </Button>
+            <Button btnType="Success" clicked={this.props.onOrderBurger}>
+              CHECKOUT
+            </Button>
+          </div>
+          <style>{`
+            .CheckoutSummary {
+                text-align: center;
+                width: 80%;
+                margin: auto;
+            }
+            `}</style>
+        </div>
+      );
     }
-
-    checkoutContinuedHandler = () => {
-        this.props.history.replace( '/checkout/contact-data' );
-    }
-
-    render () {
-        let summary = <Redirect to="/" />
-        if ( this.props.ings ) {
-            const purchasedRedirect = this.props.purchased ? <Redirect to="/"/> : null;
-            summary = (
-                <div>
-                    {purchasedRedirect}
-                    <CheckoutSummary
-                        ingredients={this.props.ings}
-                        checkoutCancelled={this.checkoutCancelledHandler}
-                        checkoutContinued={this.checkoutContinuedHandler} />
-                    <Route
-                        path={this.props.match.path + '/contact-data'}
-                        component={ContactData} />
-                </div>
-            );
-        }
-        return summary;
-    }
+    return summary;
+  }
 }
 
-const mapStateToProps = state => {
-    return {
-        ings: state.burgerBuilder.ingredients,
-        purchased: state.order.purchased
-    }
+const mapStateToProps = (state) => {
+  return {
+    species: state.burgerBuilder.species,
+    sides: state.burgerBuilder.sides,
+    price: state.burgerBuilder.totalPrice,
+    currentUser: state.auth.currentUser,
+    purchased: state.order.purchased,
+  };
 };
 
-export default connect( mapStateToProps )( Checkout );
+const mapDispatchToProps = (dispatch) => {
+  return {
+    onOrderBurger: (accountId, orderData) =>
+      dispatch(actions.purchaseIceCream(accountId, orderData)),
+  };
+};
+
+export default connect(mapStateToProps, mapDispatchToProps)(Checkout);

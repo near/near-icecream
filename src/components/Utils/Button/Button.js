@@ -1,7 +1,5 @@
 import React from "react";
 
-import classes from "./Button.css";
-
 export default ({ disabled, clicked, children }) => (
   <button disabled={disabled} className="Button" onClick={clicked}>
     {children}

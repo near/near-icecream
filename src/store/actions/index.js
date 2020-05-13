@@ -1,7 +1,14 @@
 export {
-  addIngredient,
-  removeIngredient,
-  initIngredients,
+  addSpecies,
+  removeSpecies,
+  setSides,
+  setInital,
+  checkPurchasable,
 } from "./burgerBuilder";
-export { purchaseBurger, purchaseInit, fetchOrders } from "./order";
+export {
+  purchaseInit,
+  purchaseIceCream,
+  fetchOrders,
+  fetchDisplayOrders,
+} from "./order";
 export { LogIn, LogOut, setRedirectPath, authCheckState } from "./auth";

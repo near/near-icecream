@@ -4,13 +4,13 @@ import { context, u128, PersistentMap, PersistentVector } from "near-sdk-as";
 export class OrderList {
   constructor(public postNumber: Array<string>) {}
 }
-
+@nearBindgen
 export class iceCream {
   species: Array<string>;
   sides: Array<string>;
   price: number;
 }
-
+@nearBindgen
 export class PostOrder {
   premium: boolean;
   sender: string;

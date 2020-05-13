@@ -6,20 +6,24 @@ import {
   ordersByOwner,
   displayOrders,
 } from "./model";
-import { logging } from "near-sdk-as";
+import { logging, base64, math } from "near-sdk-as";
 
 // --- contract code goes below
 
 // The maximum number of latest orders the contract returns.
 const ORDER_LIMIT = 10;
+const POST_SIZE: u32 = 16;
+
+function generatePostNumber(): string {
+  let buf = math.randomBuffer(POST_SIZE);
+  let b64 = base64.encode(buf);
+  return b64;
+}
 
 // method for collections
-export function setOrder(
-  owner: string,
-  postNumber: string,
-  iceCream: iceCream
-): void {
+export function setOrder(owner: string, iceCream: iceCream): void {
   // Creating a new message and populating fields with our data
+  const postNumber = generatePostNumber();
   const newiceCream = new PostOrder(iceCream);
   // Adding the message to end of the the persistent collection
   orders.set(postNumber, newiceCream);

@@ -1,28 +1,55 @@
-import React from 'react';
+import React from "react";
 
-import classes from './Burger.css';
-import BurgerIngredient from './BurgerIngredient/BurgerIngredient';
+import iceCreamBox from "../../assets/ice_cream_box.svg";
+import iceCreamBall from "../../assets/ice_cream_ball.svg";
 
-const burger = ( props ) => {
-    let transformedIngredients = Object.keys( props.ingredients )
-        .map( igKey => {
-            return [...Array( props.ingredients[igKey] )].map( ( _, i ) => {
-                return <BurgerIngredient key={igKey + i} type={igKey} />;
-            } );
-        } )
-        .reduce((arr, el) => {
-            return arr.concat(el)
-        }, []);
-    if (transformedIngredients.length === 0) {
-        transformedIngredients = <p>Please start adding ingredients!</p>;
+export default ({ species, side }) => {
+  console.log(species);
+  console.log(side);
+  return (
+    <div className="wrapper">
+      <img src={iceCreamBall} />
+      <img src={iceCreamBox} />
+      <style>{`
+    .wrapper {
+        width: 100%;
+        margin: auto;
+        height: 250px;
+        overflow: scroll;
+        text-align: center;
+        font-weight: bold;
+        font-size: 1.2rem;
     }
-    return (
-        <div className={classes.Burger}>
-            <BurgerIngredient type="bread-top" />
-            {transformedIngredients}
-            <BurgerIngredient type="bread-bottom" />
-        </div>
-    );
+    
+    @media (min-width: 500px) and (min-height: 400px) {
+        .wrapper {
+            width: 350px;
+            height: 300px;
+        }
+    }
+    
+    @media (min-width: 500px) and (min-height: 401px) {
+        .wrapper {
+            width: 450px;
+            height: 400px;
+        }
+    }
+    
+    @media (min-width: 1000px) and (min-height: 700px) {
+        .wrapper {
+            width: 700px;
+            height: 600px;
+        }
+    }
+    `}</style>
+    </div>
+  );
 };
 
-export default burger;
+const speciesMap = new Map([
+  ["red", "#FAC8D3"],
+  ["purple", "#DD98E2"],
+  ["blue", "#C5D9EE"],
+  ["pink", "#F6ECF1"],
+  ["green", "#CEFFE9"],
+]);

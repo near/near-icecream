@@ -1,14 +1,14 @@
 import React, { Component } from "react";
 import { connect } from "react-redux";
+import * as actions from "../../store/actions/index";
 
 import Order from "../../components/Order/Order";
 
-import * as actions from "../../store/actions/index";
 import Spinner from "../../components/UI/Spinner/Spinner";
 
 class Orders extends Component {
   componentDidMount() {
-    this.props.onFetchOrders(this.props.token, this.props.userId);
+    this.props.onFetchOrders(this.props.currentUser.accountId);
   }
 
   render() {
@@ -17,29 +17,28 @@ class Orders extends Component {
       orders = this.props.orders.map((order) => (
         <Order
           key={order.id}
-          ingredients={order.ingredients}
-          price={order.price}
+          species={order.iceCream.species}
+          sides={order.iceCream.sides}
+          price={order.iceCream.price}
         />
       ));
     }
-    return <div>{orders}</div>;
+    return <>{orders}</>;
   }
 }
 
 const mapStateToProps = (state) => {
   return {
     orders: state.order.orders,
+    currentUser: state.auth.currentUser,
     loading: state.order.loading,
-    token: state.auth.token,
-    userId: state.auth.userId,
   };
 };
 
 const mapDispatchToProps = (dispatch) => {
   return {
-    onFetchOrders: (token, userId) =>
-      dispatch(actions.fetchOrders(token, userId)),
+    onFetchOrders: (accountId) => dispatch(actions.fetchOrders(accountId)),
   };
 };
 
-export default connect(mapStateToProps, mapDispatchToProps)(Order);
+export default connect(mapStateToProps, mapDispatchToProps)(Orders);
