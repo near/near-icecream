@@ -1,4 +1,9 @@
 import * as actionTypes from "./actionTypes";
+import Big from "big.js";
+
+const BOATLOAD_OF_GAS = Big(1)
+  .times(10 ** 16)
+  .toFixed();
 
 export const purchaseInit = () => {
   return {
@@ -19,16 +24,51 @@ const purchaseIceCreamFail = (error) => {
   };
 };
 
-export const purchaseIceCream = (accountId, orderData) => {
+export const purchaseIceCream = (info) => {
+  return () => {
+    window.contract.setOrder(
+      {
+        owner: info.accountId,
+        id: info.id,
+        species: info.order.species,
+        sides: info.order.sides,
+        price: info.order.price,
+      },
+      BOATLOAD_OF_GAS,
+      Big(info.order.price)
+        .times(10 ** 24)
+        .toFixed()
+    );
+  };
+};
+
+export const checkPurchase = () => {
   return (dispatch) => {
-    window.contract
-      .setOrder({ accountId, iceCream: orderData })
-      .then(() => {
-        dispatch(purchaseIceCreamSuccess);
-      })
-      .catch((error) => {
-        dispatch(purchaseIceCreamFail(error));
-      });
+    dispatch(fetchOrdersStart());
+    const info = window.localStorage.getItem("info");
+    if (info) {
+      window.contract
+        .getIcecreamsByOwner({ owner: info.accountId })
+        .then((orders) => {
+          dispatch(fetchOrdersSuccess(orders));
+          const purchased = orders.some((order) => order.id === info.id);
+          if (purchased) {
+            dispatch(purchaseIceCreamSuccess());
+          }
+          window.localStorage.removeItem("info");
+        })
+        .catch((err) => {
+          dispatch(fetchOrdersFail(err));
+          dispatch(purchaseIceCreamFail(err));
+          window.localStorage.removeItem("info");
+        });
+    }
+  };
+};
+
+export const setPurchase = (info) => {
+  return (dispatch) => {
+    window.localStorage.setItem("info", info);
   };
 };
 
@@ -38,6 +78,7 @@ const fetchOrdersSuccess = (orders) => {
     orders: orders,
   };
 };
+
 const fetchOrdersFail = (error) => {
   return {
     type: actionTypes.FETCH_ORDERS_FAIL,
@@ -55,7 +96,7 @@ export const fetchOrders = (accountId) => {
   return (dispatch) => {
     dispatch(fetchOrdersStart());
     window.contract
-      .getIcecreamsByOwner({ accountId })
+      .getIcecreamsByOwner({ owner: accountId })
       .then((orders) => {
         dispatch(fetchOrdersSuccess(orders));
       })

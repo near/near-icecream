@@ -19,20 +19,13 @@ export const LogIn = (currentUser) => {
   };
 };
 
-export const authCheckState = () => {
-  return (dispatch) => {
-    const currentUser = window.currentUser;
-    if (!currentUser) {
-      dispatch(LogOut());
-    } else {
-      dispatch(authSuccess(currentUser));
-    }
-  };
-};
-
-export const setRedirectPath = (path) => {
-  return {
-    type: actionTypes.SET_AUTH_REDIRECT_PATH,
-    path: path,
-  };
-};
+// export const authCheckState = () => {
+//   return (dispatch) => {
+//     const currentUser = window.currentUser;
+//     if (!currentUser) {
+//       dispatch(LogOut());
+//     } else {
+//       dispatch(authSuccess(currentUser));
+//     }
+//   };
+// };

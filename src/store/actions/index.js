@@ -3,12 +3,14 @@ export {
   removeSpecies,
   setSides,
   setInital,
-  checkPurchasable,
+  setOrdered,
 } from "./icecreamBuilder";
 export {
   purchaseInit,
   purchaseIceCream,
+  checkPurchase,
+  setPurchase,
   fetchOrders,
   fetchDisplayOrders,
 } from "./order";
-export { LogIn, LogOut, setRedirectPath, authCheckState } from "./auth";
+export { LogIn, LogOut } from "./auth";

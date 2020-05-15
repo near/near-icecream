@@ -1,30 +1,22 @@
 import "regenerator-runtime/runtime";
 import React, { Component } from "react";
-import { Route, Switch, withRouter, Redirect } from "react-router-dom";
+import { Route, Switch, Redirect } from "react-router-dom";
 
 import { connect } from "react-redux";
 import * as actions from "./store/actions/index";
 
-import asyncComponent from "./components/Utils/hoc/asyncComponent";
-
 import Layout from "./components/Utils/hoc/Layout";
+
 import iceCreamBuilder from "./containers/iceCreamBuilder/iceCreamBuilder";
 import Logout from "./containers/Auth/Logout/Logout";
 import Auth from "./containers/Auth/Auth";
-
-const asyncCheckout = asyncComponent(() => {
-  return import("./containers/Checkout/Checkout");
-});
-
-const asyncOrders = asyncComponent(() => {
-  return import("./containers/Orders/Orders");
-});
+import Checkout from "./containers/Checkout/Checkout";
+import Orders from "./containers/Orders/Orders";
 
 class App extends Component {
   componentDidMount() {
-    this.props.checkAuth();
+    this.props.onInitPurchase();
   }
-
   render() {
     let routes = (
       <Switch>
@@ -37,8 +29,8 @@ class App extends Component {
     if (this.props.isAuthenticated) {
       routes = (
         <Switch>
-          <Route path="/checkout" component={asyncCheckout} />
-          <Route path="/orders" component={asyncOrders} />
+          <Route path="/checkout" component={Checkout} />
+          <Route path="/orders" component={Orders} />
           <Route path="/logout" component={Logout} />
           <Route path="/auth" component={Auth} />
           <Route path="/" exact component={iceCreamBuilder} />
@@ -47,11 +39,7 @@ class App extends Component {
       );
     }
 
-    return (
-      <div>
-        <Layout>{routes}</Layout>
-      </div>
-    );
+    return <Layout>{routes}</Layout>;
   }
 }
 
@@ -63,8 +51,8 @@ const mapStateToProps = (state) => {
 
 const mapDispatchToProps = (dispatch) => {
   return {
-    checkAuth: () => dispatch(actions.authCheckState()),
+    onInitPurchase: () => dispatch(actions.purchaseInit()),
   };
 };
 
-export default withRouter(connect(mapStateToProps, mapDispatchToProps)(App));
+export default connect(mapStateToProps, mapDispatchToProps)(App);

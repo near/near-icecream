@@ -27,9 +27,6 @@ export const setSides = (name) => {
   };
 };
 
-export const checkPurchasable = (speciesList) => {
-  return {
-    type: actionTypes.CHECK_PURCHASABLE,
-    speciesList,
-  };
+export const setOrdered = () => {
+  return { type: actionTypes.SET_ORDERED };
 };

@@ -5,13 +5,13 @@ import NavigationItem from "./NavigationItem/NavigationItem";
 export default ({ isAuthenticated }) => (
   <ul className="NavigationItems">
     <NavigationItem link="/" exact>
-      Burger Builder
+      Ice Cream Builder
     </NavigationItem>
     {isAuthenticated ? (
-      <NavigationItem link="/orders">Orders</NavigationItem>
+      <NavigationItem link="/orders">Your Orders</NavigationItem>
     ) : null}
     {!isAuthenticated ? (
-      <NavigationItem link="/auth">Authenticate</NavigationItem>
+      <NavigationItem link="/auth">Login</NavigationItem>
     ) : (
       <NavigationItem link="/logout">Logout</NavigationItem>
     )}

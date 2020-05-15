@@ -131,6 +131,14 @@ var _reactRouterDom = require("react-router-dom");
 
 var _reactRedux = require("react-redux");
 
+var actions = _interopRequireWildcard(require("../../store/actions/index"));
+
+var _iceCream = _interopRequireDefault(require("../../components/iceCream/iceCream"));
+
+var _Button = _interopRequireDefault(require("../../components/Utils/Button"));
+
+function _interopRequireDefault(obj) { return obj && obj.__esModule ? obj : { default: obj }; }
+
 function _getRequireWildcardCache() { if (typeof WeakMap !== "function") return null; var cache = new WeakMap(); _getRequireWildcardCache = function () { return cache; }; return cache; }
 
 function _interopRequireWildcard(obj) { if (obj && obj.__esModule) { return obj; } if (obj === null || typeof obj !== "object" && typeof obj !== "function") { return { default: obj }; } var cache = _getRequireWildcardCache(); if (cache && cache.has(obj)) { return cache.get(obj); } var newObj = {}; var hasPropertyDescriptor = Object.defineProperty && Object.getOwnPropertyDescriptor; for (var key in obj) { if (Object.prototype.hasOwnProperty.call(obj, key)) { var desc = hasPropertyDescriptor ? Object.getOwnPropertyDescriptor(obj, key) : null; if (desc && (desc.get || desc.set)) { Object.defineProperty(newObj, key, desc); } else { newObj[key] = obj[key]; } } } newObj.default = obj; if (cache) { cache.set(obj, newObj); } return newObj; }
@@ -171,13 +179,13 @@ class Checkout extends _react.Component {
           width: "100%",
           margin: "auto"
         }
-      }, /*#__PURE__*/_react.default.createElement(Burger, {
+      }, /*#__PURE__*/_react.default.createElement(_iceCream.default, {
         species: this.props.species,
         side: this.props.sides
-      })), /*#__PURE__*/_react.default.createElement(Button, {
+      })), /*#__PURE__*/_react.default.createElement(_Button.default, {
         btnType: "Danger",
         clicked: this.checkoutCancelled
-      }, "CANCEL"), /*#__PURE__*/_react.default.createElement(Button, {
+      }, "CANCEL"), /*#__PURE__*/_react.default.createElement(_Button.default, {
         btnType: "Success",
         clicked: this.props.onOrderBurger
       }, "CHECKOUT")), /*#__PURE__*/_react.default.createElement("style", null, `
@@ -213,7 +221,7 @@ const mapDispatchToProps = dispatch => {
 var _default = (0, _reactRedux.connect)(mapStateToProps, mapDispatchToProps)(Checkout);
 
 exports.default = _default;
-},{"react":"../node_modules/react/index.js","react-router-dom":"../node_modules/react-router-dom/esm/react-router-dom.js","react-redux":"../node_modules/react-redux/es/index.js"}],"../node_modules/parcel-bundler/src/builtins/hmr-runtime.js":[function(require,module,exports) {
+},{"react":"../node_modules/react/index.js","react-router-dom":"../node_modules/react-router-dom/esm/react-router-dom.js","react-redux":"../node_modules/react-redux/es/index.js","../../store/actions/index":"store/actions/index.js","../../components/iceCream/iceCream":"components/iceCream/iceCream.js","../../components/Utils/Button":"components/Utils/Button.js"}],"../node_modules/parcel-bundler/src/builtins/hmr-runtime.js":[function(require,module,exports) {
 var global = arguments[3];
 var OVERLAY_ID = '__parcel__error__overlay__';
 var OldModule = module.bundle.Module;
@@ -241,7 +249,7 @@ var parent = module.bundle.parent;
 if ((!parent || !parent.isParcelRequire) && typeof WebSocket !== 'undefined') {
   var hostname = "" || location.hostname;
   var protocol = location.protocol === 'https:' ? 'wss' : 'ws';
-  var ws = new WebSocket(protocol + '://' + hostname + ':' + "64298" + '/');
+  var ws = new WebSocket(protocol + '://' + hostname + ':' + "51618" + '/');
 
   ws.onmessage = function (event) {
     checkedAssets = {};

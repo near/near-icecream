@@ -12,7 +12,7 @@ export default ({ open, closed, isAuth }) => (
       style={{ transform: open ? "translateX(0)" : " translateX(-100%)" }}
       onClick={closed}
     >
-      <div style={{ height: "11%", marginBotton: "32px" }}>
+      <div style={{ height: "20%", marginBottom: "10px" }}>
         <Logo />
       </div>
       <nav>
@@ -29,7 +29,7 @@ export default ({ open, closed, isAuth }) => (
           top: 0;
           z-index: 20;
           background-color: white;
-          padding: 32px 16px;
+          padding: 45px 16px;
           box-sizing: border-box;
           transition: transform 0.3s ease-out;
       }

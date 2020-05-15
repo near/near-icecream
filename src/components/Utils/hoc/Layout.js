@@ -23,6 +23,7 @@ class Layout extends Component {
     return (
       <>
         <Toolbar
+          currentUser={this.props.currentUser}
           isAuth={this.props.isAuthenticated}
           drawerToggleClicked={this.sideDrawerToggleHandler}
         />
@@ -38,7 +39,10 @@ class Layout extends Component {
 }
 
 const mapStateToProps = (state) => {
-  return { isAuthenticated: !!state.auth.currentUser };
+  return {
+    isAuthenticated: !!state.auth.currentUser,
+    currentUser: state.auth.currentUser,
+  };
 };
 
 export default connect(mapStateToProps)(Layout);

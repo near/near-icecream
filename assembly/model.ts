@@ -4,17 +4,17 @@ import { context, u128, PersistentMap, PersistentVector } from "near-sdk-as";
 export class OrderList {
   constructor(public postNumber: Array<string>) {}
 }
-@nearBindgen
-export class iceCream {
-  species: Array<string>;
-  sides: Array<string>;
-  price: u32;
-}
+
 @nearBindgen
 export class PostOrder {
   premium: boolean;
   sender: string;
-  constructor(public iceCream: iceCream) {
+  constructor(
+    public species: Array<string>,
+    public sides: string,
+    public price: u32,
+    public id: string
+  ) {
     this.premium =
       context.attachedDeposit >= u128.from("10000000000000000000000");
     this.sender = context.sender;

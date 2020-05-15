@@ -12,6 +12,8 @@ export default ({ link, exact, children }) => (
             box-sizing: border-box;
             display: block;
             width: 100%;
+            font-size: 1.6rem;
+            font-weight: bold;
         }
         
         .NavigationItem a {
@@ -38,17 +40,18 @@ export default ({ link, exact, children }) => (
             }
             
             .NavigationItem a {
-                color: white;
+                color: black;
                 height: 100%;
                 padding: 16px 10px;
                 border-bottom: 4px solid transparent;
+                margin:auto;
             }
             
             .NavigationItem a:hover,
             .NavigationItem a:active,
             .NavigationItem a.active {
-                background-color: #8F5C2C;
-                border-bottom: 4px solid #40A4C8;
+                background-color: rgba(0,0,0,0.3);
+                border-bottom: 4px solid #fff;
                 color: white;
             }
         }

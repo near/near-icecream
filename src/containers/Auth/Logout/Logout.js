@@ -15,7 +15,6 @@ class Logout extends Component {
   requestSignOut = () => {
     window.wallet.signOut();
     setTimeout(this.signedOutFlow, 1000);
-    console.log("after sign out");
     if (window.location.search.includes("account_id")) {
       window.location.replace(
         window.location.origin + window.location.pathname

@@ -4,12 +4,16 @@ import { updateObject } from "../shared/utility";
 const initialState = {
   orders: Array(),
   purchased: false,
-  error: null,
+  purchaseError: null,
+  fetchError: null,
   loading: false,
 };
 
 const purchaseInit = (state) => {
-  return updateObject(state, { purchased: false });
+  return updateObject(state, {
+    purchased: false,
+    purchaseError: null,
+  });
 };
 
 const purchaseIceCreamSuccess = (state) => {
@@ -17,11 +21,11 @@ const purchaseIceCreamSuccess = (state) => {
 };
 
 const purchaseIceCreamFail = (state, action) => {
-  return updateObject(state, { error: action.error });
+  return updateObject(state, { purchased: true, purchaseError: action.error });
 };
 
 const fetchOrdersStart = (state) => {
-  return updateObject(state, { loading: true });
+  return updateObject(state, { loading: true, fetchError: null });
 };
 
 const fetchOrdersSuccess = (state, action) => {
@@ -29,7 +33,7 @@ const fetchOrdersSuccess = (state, action) => {
 };
 
 const fetchOrdersFail = (state, action) => {
-  return updateObject(state, { loading: false, error: action.error });
+  return updateObject(state, { loading: false, fetchError: action.error });
 };
 
 const reducer = (state = initialState, action) => {

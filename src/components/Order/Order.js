@@ -9,7 +9,7 @@ export default ({ species, sides, price }) => {
           display: "inline-block",
           margin: "0 8px",
           border: "1px solid #ccc",
-          padding: "5px",
+          padding: "8px",
         }}
         key={ig}
       >
@@ -30,9 +30,10 @@ export default ({ species, sides, price }) => {
             width: 80%;
             border: 1px solid #eee;
             box-shadow: 0 2px 3px #ccc;
-            padding: 10px;
-            margin: 10px auto;
+            padding: 15px;
+            margin:20px auto;
             box-sizing: border-box;
+            background: #ffffe6;
         }`}</style>
     </div>
   );

@@ -1,111 +1,124 @@
 import React, { Component } from "react";
+import { Redirect } from "react-router-dom";
+
 import { connect } from "react-redux";
+import * as actions from "../../../store/actions/index";
 
 import FlavorButton from "../../Utils/FlavorButton";
+import Button from "../../Utils/Button";
 
 class BuildControls extends Component {
-  sides = [
-    { label: "chocolate", type: "#7B3F00" },
-    { label: "mochi", type: "#AAD400" },
-    { label: "strawberry", type: "#E66363" },
-  ];
+  sides = [{ label: "chocolate" }, { label: "mochi" }, { label: "strawberry" }];
   flavors = [
-    { label: "red", type: "#FAC8D3" },
-    { label: "purple", type: "#DD98E2" },
-    { label: "blue", type: "#C5D9EE" },
-    { label: "pink", type: "#F6ECF1" },
-    { label: "green", type: "#CEFFE9" },
+    { label: "apple" },
+    { label: "grape" },
+    { label: "vanilla" },
+    { label: "lime" },
+    { label: "strawberry" },
+    { label: "blueberry" },
+    { label: "orange" },
+    { label: "pineapple" },
+    { label: "peach" },
+    { label: "oreo" },
+    { label: "coffee" },
+    { label: "walnut" },
+    { label: "peanut butter" },
+    { label: "sweet potato" },
   ];
 
-  selectedHandler = (type) => {
-    return this.props.species.some((s) => s === type);
+  selectedHandler = (label) => {
+    return this.props.species.some((s) => s === label);
   };
 
-  addSpecies = (type) => {
-    this.props.ingredientAdded(type);
-    this.props.onCheckPurchasable(this.props.species);
+  seletedSideHandler = (sides) => {
+    return this.props.sides === sides;
   };
 
-  removeSpecies = (type) => {
-    this.props.ingredientRemoved(type);
-    this.props.onCheckPurchasable(this.props.species);
+  purchaseHandler = () => {
+    this.props.onInitPurchase();
+    this.props.onSetOrder(true);
   };
 
   render() {
     const {
       price,
-      sideSelected,
+      onSelectSides,
+      onIngredientAdded,
+      onIngredientRemoved,
       purchasable,
       ordered,
-      isAuthenticated,
+      species,
     } = this.props;
+    if (ordered) {
+      return <Redirect to="/checkout" />;
+    }
     const sideButtons = this.sides.map((side) => (
-      <button key={side.label} onClick={sideSelected}>
+      <Button
+        key={side.label}
+        clicked={() => onSelectSides(side.label)}
+        selected={this.seletedSideHandler(side.label)}
+      >
         {side.label}
-      </button>
+      </Button>
     ));
     const flavorButtons = this.flavors.map((flavor) => (
       <FlavorButton
         key={flavor.label}
-        added={() => this.addSpecies(flavor.type)}
-        removed={() => this.removeSpecies(flavor.type)}
-        disabled={purchasable}
-        selected={this.selectedHandler(flavor.type)}
+        added={() => onIngredientAdded(flavor.label)}
+        removed={() => onIngredientRemoved(flavor.label)}
+        disabled={!purchasable}
+        selected={this.selectedHandler(flavor.label)}
       >
         {flavor.label}
       </FlavorButton>
     ));
     const orderButton = (
-      <button className="OrderButton" disabled={!purchasable} onClick={ordered}>
+      <button
+        className="OrderButton"
+        onClick={this.purchaseHandler}
+        disabled={species.length < 1}
+      >
         ORDER NOW
       </button>
     );
-    const buttonGroup = (
-      <>
-        {sideButtons}
-        {flavorButtons}
-        {orderButton}
-      </>
-    );
     return (
-      <div className="BuildControl">
+      <div className="BuildControls">
         <p>
           Current Price: <strong>{price}</strong>
         </p>
-        {isAuthenticated ? (
-          buttonGroup
-        ) : (
-          <button disabled={!purchasable} onClick={ordered}>
-            Please Log in to order yummy ice cream
-          </button>
-        )}
+        <div>Sides: {sideButtons}</div>
+        <div>Flavors: {flavorButtons}</div>
+        <div>{orderButton}</div>
         <style>{`
           .BuildControls {
-              width: 100%;
-              background-color: #CF8F2E;
-              display: flex;
-              flex-flow: column;
-              align-items: center;
-              box-shadow: 0 2px 1px #ccc;
+              width: 60%;
+              text-align: center;
+              background-color: #e9495c;
+              box-shadow: 5px 5px 5px #ccc;
+              border-radius: 10px;
               margin: auto;
-              padding: 10px 0;
+              padding: 20px 0;
+              color: #ffd9b3;
+              font-weight: bold;
           }
           
           .OrderButton {
-              background-color: #DAD735;
+              background-color: #ffe6ff;
               outline: none;
               cursor: pointer;
-              border: 1px solid #966909;
-              color: #966909;
+              border: 3px solid #966909;
+              color: #86592d;
               font-family: inherit;
               font-size: 1.2em;
               padding: 15px 30px;
-              box-shadow: 2px 2px 2px #966909;
+              box-shadow: 3px 3px 3px #966909;
+              margin-top: 10px;
+              border-radius: 50px
           }
           
           .OrderButton:hover, .OrderButton:active {
-              background-color: #A0DB41;
-              border: 1px solid #966909;
+              background-color: #ffccff;
+              border: 3px solid #966909;
               color: #966909;
           }
           
@@ -113,7 +126,7 @@ class BuildControls extends Component {
               background-color: #C7C6C6;
               cursor: not-allowed;
               border: 1px solid #ccc;
-              color: #888888;
+              color: ;
           }
           
           .OrderButton:not(:disabled) {
@@ -140,9 +153,10 @@ class BuildControls extends Component {
 const mapStateToProps = (state) => {
   return {
     species: state.iceCreamBuilder.species,
+    sides: state.iceCreamBuilder.sides,
     price: state.iceCreamBuilder.totalPrice,
     purchasable: state.iceCreamBuilder.purchasable,
-    isAuthenticated: !!state.auth.currentUser,
+    ordered: state.iceCreamBuilder.ordered,
   };
 };
 
@@ -150,12 +164,9 @@ const mapDispatchToProps = (dispatch) => {
   return {
     onIngredientAdded: (ingName) => dispatch(actions.addSpecies(ingName)),
     onIngredientRemoved: (ingName) => dispatch(actions.removeSpecies(ingName)),
-    onInitIngredients: () => dispatch(actions.setInital()),
     onSelectSides: (side) => dispatch(actions.setSides(side)),
-    onCheckPurchasable: (speciesList) =>
-      dispatch(actions.checkPurchasable(speciesList)),
     onInitPurchase: () => dispatch(actions.purchaseInit()),
-    setPath: (path) => dispatch(actions.setRedirectPath(path)),
+    onSetOrder: () => dispatch(actions.setOrdered()),
   };
 };
 

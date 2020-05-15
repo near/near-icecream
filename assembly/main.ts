@@ -1,5 +1,4 @@
 import {
-  iceCream,
   PostOrder,
   orders,
   OrderList,
@@ -12,6 +11,8 @@ import { logging, base64, math } from "near-sdk-as";
 
 // The maximum number of latest orders the contract returns.
 const ORDER_LIMIT = 10;
+
+// generate Hash post number
 const POST_SIZE: u32 = 16;
 
 function generatePostNumber(): string {
@@ -21,10 +22,16 @@ function generatePostNumber(): string {
 }
 
 // method for collections
-export function setOrder(owner: string, iceCream: iceCream): void {
+export function setOrder(
+  owner: string,
+  id: string,
+  species: Array<string>,
+  sides: string,
+  price: u32
+): void {
   // Creating a new message and populating fields with our data
   const postNumber = generatePostNumber();
-  const newiceCream = new PostOrder(iceCream);
+  const newiceCream = new PostOrder(species, sides, price, id);
   // Adding the message to end of the the persistent collection
   orders.set(postNumber, newiceCream);
   displayOrders.push(newiceCream);

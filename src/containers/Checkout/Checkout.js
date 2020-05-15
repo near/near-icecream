@@ -1,52 +1,69 @@
 import React, { Component } from "react";
 import { Redirect } from "react-router-dom";
+
 import { connect } from "react-redux";
+import * as actions from "../../store/actions/index";
+
+import Button from "../../components/Utils/Button";
+import Spinner from "../../components/Utils/Spinner";
 
 class Checkout extends Component {
-  checkoutCancelledHandler = () => {
-    this.props.history.goBack();
-  };
+  state = { loading: false };
   checkoutHandler = () => {
-    const order = {
-      species: this.props.species,
-      sides: this.props.sides,
-      price: this.props.price,
+    this.setState({ loading: true });
+    const info = {
+      accountId: this.props.currentUser.accountId,
+      id: this.props.species.join(""),
+      order: {
+        species: this.props.species,
+        sides: this.props.sides,
+        price: this.props.price,
+      },
     };
-    this.props.onOrderBurger(this.props.currentUser.accountId, order);
+    this.props.onSetPurchase(info);
+    this.props.onPurchaseIceCream(info);
   };
 
   render() {
-    let summary = <Redirect to="/" />;
-    if (this.props.species) {
-      const purchasedRedirect = this.props.purchased ? (
-        <Redirect to="/" />
-      ) : null;
-      summary = (
-        <div>
-          {purchasedRedirect}
-          <div className="CheckoutSummary">
-            <h1>Hope you enjoy it!</h1>
-            <div style={{ width: "100%", margin: "auto" }}>
-              <Burger species={this.props.species} side={this.props.sides} />
-            </div>
-            <Button btnType="Danger" clicked={this.checkoutCancelled}>
-              CANCEL
-            </Button>
-            <Button btnType="Success" clicked={this.props.onOrderBurger}>
+    if (!this.props.isAuthenticated) {
+      return <Redirect to="/auth" />;
+    }
+    return (
+      <div>
+        <div className="CheckoutSummary">
+          <h1>Hope you enjoy it!</h1>
+          <div style={{ width: "100%", margin: "auto" }}>
+            <h3>Your Order</h3>
+            <p>A delicious ice cream with the following flavors:</p>
+            <p>Side: {this.props.sides}</p>
+            <p>Flavor:</p>
+            <ul>
+              {this.props.species.map((s, i) => (
+                <li key={i}>{s}</li>
+              ))}
+            </ul>
+            <p>
+              <strong>Total Price: {this.props.price}</strong>
+            </p>
+          </div>
+          {!this.state.loading ? (
+            <Button btnType="Success" clicked={this.checkoutHandler}>
               CHECKOUT
             </Button>
-          </div>
-          <style>{`
-            .CheckoutSummary {
-                text-align: center;
-                width: 80%;
-                margin: auto;
-            }
-            `}</style>
+          ) : (
+            <Spinner />
+          )}
         </div>
-      );
-    }
-    return summary;
+        <style>{`
+          .CheckoutSummary {
+              text-align: center;
+              width: 80%;
+              height: 100vh;
+              margin: auto;
+          }
+          `}</style>
+      </div>
+    );
   }
 }
 
@@ -56,14 +73,14 @@ const mapStateToProps = (state) => {
     sides: state.iceCreamBuilder.sides,
     price: state.iceCreamBuilder.totalPrice,
     currentUser: state.auth.currentUser,
-    purchased: state.order.purchased,
+    isAuthenticated: !!state.auth.currentUser,
   };
 };
 
 const mapDispatchToProps = (dispatch) => {
   return {
-    onOrderBurger: (accountId, orderData) =>
-      dispatch(actions.purchaseIceCream(accountId, orderData)),
+    onPurchaseIceCream: (info) => dispatch(actions.purchaseIceCream(info)),
+    onSetPurchase: (info) => dispatch(actions.setPurchase(info)),
   };
 };
 

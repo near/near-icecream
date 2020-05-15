@@ -17,13 +17,21 @@ class Orders extends Component {
       orders = this.props.orders.map((order) => (
         <Order
           key={order.id}
-          species={order.iceCream.species}
-          sides={order.iceCream.sides}
-          price={order.iceCream.price}
+          species={order.species}
+          sides={order.sides}
+          price={order.price}
         />
       ));
     }
-    return <>{orders}</>;
+
+    if (this.props.orders.length === 0) {
+      return (
+        <h3 style={{ textAlign: "center", marginTop: "100px" }}>
+          Not having any ice Cream? Click Ice Cream Builder to start your order
+        </h3>
+      );
+    }
+    return <div style={{ marginTop: "100px" }}>{orders}</div>;
   }
 }
 

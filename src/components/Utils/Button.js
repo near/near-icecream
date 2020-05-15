@@ -1,38 +1,30 @@
 import React from "react";
 
-export default ({ disabled, clicked, children }) => (
-  <button disabled={disabled} className="Button" onClick={clicked}>
+export default ({ disabled, clicked, selected, children }) => (
+  <button
+    disabled={disabled}
+    className="Button"
+    onClick={clicked}
+    style={{ backgroundColor: selected ? "#dd99ff" : "#ffdeee" }}
+  >
     {children}
     <style>{`
         .Button {
-            background-color: transparent;
-            border: none;
-            color: white;
+            border-radius: 10px;
+            color: #86592d;
             outline: none;
             cursor: pointer;
-            font: inherit;
+            font-size: 14px;
             padding: 10px;
             margin: 10px;
             font-weight: bold;
         }
         
-        .Button:first-of-type {
-            margin-left: 0;
-            padding-left: 0;
-        }
-        
         .Button:disabled {
-            color: #ccc;
+            color: #e6e6e6;
             cursor: not-allowed;
         }
-        
-        .Success {
-            color: #5C9210;
-        }
-        
-        .Danger {
-            color: #944317;
-        }
+
         `}</style>
   </button>
 );

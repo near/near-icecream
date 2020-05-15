@@ -1,55 +1,45 @@
 import React from "react";
 
-import iceCreamBox from "../../assets/ice_cream_box.svg";
-import iceCreamBall from "../../assets/ice_cream_ball.svg";
+import IceCreamBox from "./Box/Box";
 
-export default ({ species, side }) => {
-  console.log(species);
-  console.log(side);
+export default ({ species, sides }) => {
+  const side = sidesMap.get(sides);
+  const flavors = species.map((s) => speciesMap.get(s));
   return (
     <div className="wrapper">
-      <img src={iceCreamBall} style={{ width: "200px" }} />
-      <img src={iceCreamBox} style={{ width: "300px" }} />
+      <IceCreamBox side={side} flavors={flavors} />
       <style>{`
     .wrapper {
-        width: 100%;
+        width: 600px;
+        max-width: 100%;
         margin: auto;
-        height: 250px;
-        overflow: scroll;
+        margin-bottom: 30px;
         text-align: center;
-        font-weight: bold;
-        font-size: 1.2rem;
-    }
-    
-    @media (min-width: 500px) and (min-height: 400px) {
-        .wrapper {
-            width: 350px;
-            height: 300px;
-        }
-    }
-    
-    @media (min-width: 500px) and (min-height: 401px) {
-        .wrapper {
-            width: 450px;
-            height: 400px;
-        }
-    }
-    
-    @media (min-width: 1000px) and (min-height: 700px) {
-        .wrapper {
-            width: 700px;
-            height: 600px;
-        }
     }
     `}</style>
     </div>
   );
 };
 
+const sidesMap = new Map([
+  ["chocolate", "#7B3F00"],
+  ["mochi", "#AAD400"],
+  ["strawberry", "#E66363"],
+]);
+
 const speciesMap = new Map([
-  ["red", "#FAC8D3"],
-  ["purple", "#DD98E2"],
-  ["blue", "#C5D9EE"],
-  ["pink", "#F6ECF1"],
-  ["green", "#CEFFE9"],
+  ["apple", "#FAC8D3"],
+  ["grape", "#DD98E2"],
+  ["blueberry", "#C5D9EE"],
+  ["vanilla", "#F6ECF1"],
+  ["lime", "#CEFFE9"],
+  ["strawberry", "#ff0066"],
+  ["orange", "#ffb31a"],
+  ["pineapple", "#ffff66"],
+  ["peach", "#ffb3ff"],
+  ["oreo", "#331a00"],
+  ["coffee", "#664400"],
+  ["walnut", "#7f5b51"],
+  ["peanut butter", "#cd9141"],
+  ["sweet potato", "#fea134"],
 ]);

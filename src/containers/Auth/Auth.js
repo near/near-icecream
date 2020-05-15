@@ -7,9 +7,6 @@ import * as actions from "../../store/actions/index";
 import Button from "../../components/Utils/Button";
 class Auth extends Component {
   componentDidMount() {
-    if (!this.props.building && this.props.authRedirectPath !== "/") {
-      this.props.setPath();
-    }
     if (window.wallet.isSignedIn()) {
       this.props.setCurrentUser(window.currentUser);
     }
@@ -28,7 +25,7 @@ class Auth extends Component {
 
   render() {
     if (this.props.isAuthenticated) {
-      return <Redirect to={this.props.authRedirectPath} />;
+      return <Redirect to="/" />;
     }
 
     return (
@@ -58,7 +55,6 @@ class Auth extends Component {
 const mapStateToProps = (state) => {
   return {
     isAuthenticated: !!state.auth.currentUser,
-    building: state.iceCreamBuilder.building,
     authRedirectPath: state.auth.authRedirectPath,
   };
 };
@@ -66,7 +62,6 @@ const mapStateToProps = (state) => {
 const mapDispatchToProps = (dispatch) => {
   return {
     setCurrentUser: (currentUser) => dispatch(actions.LogIn(currentUser)),
-    setPath: () => dispatch(actions.setRedirectPath("/")),
   };
 };
 
