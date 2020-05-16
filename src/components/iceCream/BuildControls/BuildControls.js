@@ -4,8 +4,8 @@ import { Redirect } from "react-router-dom";
 import { connect } from "react-redux";
 import * as actions from "../../../store/actions/index";
 
-import FlavorButton from "../../Utils/FlavorButton";
 import Button from "../../Utils/Button";
+import FlavorButton from "../../Utils/FlavorButton";
 
 class BuildControls extends Component {
   sides = [{ label: "chocolate" }, { label: "mochi" }, { label: "strawberry" }];
