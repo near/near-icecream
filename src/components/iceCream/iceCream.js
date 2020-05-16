@@ -12,6 +12,7 @@ export default ({ species, sides }) => {
     .wrapper {
         width: 600px;
         max-width: 100%;
+        height: 100%;
         margin: auto;
         margin-bottom: 30px;
         text-align: center;
@@ -21,13 +22,13 @@ export default ({ species, sides }) => {
   );
 };
 
-const sidesMap = new Map([
+export const sidesMap = new Map([
   ["chocolate", "#7B3F00"],
   ["mochi", "#AAD400"],
   ["strawberry", "#E66363"],
 ]);
 
-const speciesMap = new Map([
+export const speciesMap = new Map([
   ["apple", "#FAC8D3"],
   ["grape", "#DD98E2"],
   ["blueberry", "#C5D9EE"],
