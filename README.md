@@ -8,7 +8,7 @@
 <br />
 <br />
 
-## Template for NEAR dapps
+## Buying IceCream with near token
 ### Requirements
 ##### IMPORTANT: Make sure you have the latest version of NEAR Shell and Node Version > 10.x 
 
@@ -65,8 +65,7 @@ Modify `src/config.js` line that sets the account name of the contract. Set it t
 NOTE: When you use [create-near-app](https://github.com/nearprotocol/create-near-app) to create the project it'll infer and pre-populate name of contract based on project folder name.
 
 ```javascript
-const CONTRACT_NAME = 'react-template'; /* TODO: Change this to your contract's name! */
-const DEFAULT_ENV = 'development';
+const CONTRACT_NAME = process.env.CONTRACT_NAME || "near-icecream.testnet";/* TODO: Change this to your contract's name! */
 ...
 ```
 
@@ -84,7 +83,7 @@ with yarn:
 yarn deploy
 ```
 
-NOTE: This uses [gh-pages](https://github.com/tschaub/gh-pages) to publish resulting website on GitHub pages. It'll only work if project already has repository set up on GitHub. Feel free to modify `deploy:pages` script in `package.json` to deploy elsewhere.
+NOTE: This uses [render.com](https://github.com/tschaub/gh-pages) to publish resulting website. 
 
 ### To Explore
 
@@ -92,5 +91,3 @@ NOTE: This uses [gh-pages](https://github.com/tschaub/gh-pages) to publish resul
 - `src/index.html` for the front-end HTML
 - `src/index.js` for the JavaScript front-end code and how to integrate contracts
 - `src/App.js` for the main React component
-- `src/main.test.js` for the JavaScript integration tests of smart contract
-- `src/App.test.js` for the main React component tests
