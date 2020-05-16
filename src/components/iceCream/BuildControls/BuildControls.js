@@ -8,7 +8,11 @@ import Button from "../../Utils/Button";
 import FlavorButton from "../../Utils/FlavorButton";
 
 class BuildControls extends Component {
-  sides = [{ label: "chocolate" }, { label: "mochi" }, { label: "strawberry" }];
+  sides = [
+    { label: "chocolate" },
+    { label: "matcha" },
+    { label: "strawberry" },
+  ];
   flavors = [
     { label: "apple" },
     { label: "grape" },

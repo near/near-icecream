@@ -24,7 +24,7 @@ export default ({ species, sides }) => {
 
 export const sidesMap = new Map([
   ["chocolate", "#7B3F00"],
-  ["mochi", "#AAD400"],
+  ["matcha", "#AAD400"],
   ["strawberry", "#E66363"],
 ]);
 
