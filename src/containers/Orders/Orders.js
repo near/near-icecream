@@ -8,8 +8,8 @@ import Spinner from "../../components/Utils/Spinner";
 
 class Orders extends Component {
   componentDidMount() {
-    this.props.onFetchOrders(this.props.currentUser.accountId);
     this.props.onInitPurchase();
+    this.props.onFetchOrders(this.props.currentUser.accountId);
   }
 
   render() {
