@@ -83,7 +83,7 @@ with yarn:
 yarn deploy
 ```
 
-NOTE: This uses [render.com](https://github.com/tschaub/gh-pages) to publish resulting website. 
+NOTE: This uses [render.com](https://icecream.onrender.com) to publish resulting website. 
 
 ### To Explore
 
