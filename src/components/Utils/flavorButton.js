@@ -21,7 +21,6 @@ export default ({ disabled, selected, added, removed, children }) => (
         }
         
         .flavorButton:disabled {
-          background-color: #C7C6C6;
             color: #e6e6e6;
             cursor: not-allowed;
         }
