@@ -2,7 +2,6 @@ const CONTRACT_NAME = process.env.CONTRACT_NAME || "near-icecream.testnet";
 
 function getConfig(env) {
   switch (env) {
-    case "production":
     case "mainnet":
       return {
         networkId: "mainnet",
@@ -12,6 +11,7 @@ function getConfig(env) {
         helperUrl: "https://helper.mainnet.near.org",
       };
     case "development":
+    case "production":
     case "testnet":
       return {
         networkId: "default",
