@@ -1,15 +1,14 @@
 import React from "react";
 
-export default ({ disabled, selected, added, removed, children }) => {
-  return (
-    <button
-      disabled={disabled && !selected}
-      onClick={selected ? removed : added}
-      style={{ backgroundColor: selected ? "#ffb3d9" : "#ffd9b3" }}
-      className="flavorButton"
-    >
-      {children}
-      <style>{`
+export default ({ disabled, selected, added, removed, children }) => (
+  <button
+    disabled={disabled && !selected}
+    onClick={selected ? removed : added}
+    style={{ backgroundColor: selected ? "#ffb3d9" : "#ffd9b3" }}
+    className="flavorButton"
+  >
+    {children}
+    <style>{`
         .flavorButton {
             border-radius: 50%;
             color: #86592d;
@@ -28,6 +27,5 @@ export default ({ disabled, selected, added, removed, children }) => {
         }
 
         `}</style>
-    </button>
-  );
-};
+  </button>
+);
