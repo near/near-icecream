@@ -5,7 +5,7 @@ import { connect } from "react-redux";
 import * as actions from "../../../store/actions/index";
 
 import Button from "../../../components/Utils/Button";
-
+import cup from "../../../assets/heart_cup.png";
 class Logout extends Component {
   signedOutFlow = async () => {
     this.props.onLogout();
@@ -22,7 +22,24 @@ class Logout extends Component {
     }
   };
   render() {
-    return <Button clicked={this.requestSignOut}>Log Out</Button>;
+    return (
+      <div className="Auth">
+        <img src={cup} />
+        <Button clicked={this.requestSignOut}>Log Out</Button>
+        <style>{`
+          .Auth {
+              margin:auto;
+              text-align: center;
+              width: 700px;
+          }
+
+          .Auth img {
+            width: 700px;
+            max-width: 90%;
+          }
+        `}</style>
+      </div>
+    );
   }
 }
 

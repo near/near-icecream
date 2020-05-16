@@ -36796,6 +36796,7 @@ var _default = ({
             padding: 10px 0;
             box-sizing: border-box;
             cursor: pointer;
+            margin-right: 10px;
         }
         
         .DrawerToggle div {
@@ -45587,7 +45588,7 @@ var ALPHABET = '123456789ABCDEFGHJKLMNPQRSTUVWXYZabcdefghijkmnopqrstuvwxyz'
 
 module.exports = basex(ALPHABET)
 
-},{"base-x":"../node_modules/base-x/src/index.js"}],"../node_modules/bn.js/lib/bn.js":[function(require,module,exports) {
+},{"base-x":"../node_modules/base-x/src/index.js"}],"../node_modules/near-api-js/node_modules/bn.js/lib/bn.js":[function(require,module,exports) {
 var Buffer = require("buffer").Buffer;
 (function (module, exports) {
   'use strict';
@@ -45694,7 +45695,7 @@ var Buffer = require("buffer").Buffer;
       this.negative = 1;
     }
 
-    this.strip();
+    this._strip();
 
     if (endian !== 'le') return;
 
@@ -45707,7 +45708,7 @@ var Buffer = require("buffer").Buffer;
       number = -number;
     }
     if (number < 0x4000000) {
-      this.words = [ number & 0x3ffffff ];
+      this.words = [number & 0x3ffffff];
       this.length = 1;
     } else if (number < 0x10000000000000) {
       this.words = [
@@ -45735,7 +45736,7 @@ var Buffer = require("buffer").Buffer;
     // Perhaps a Uint8Array
     assert(typeof number.length === 'number');
     if (number.length <= 0) {
-      this.words = [ 0 ];
+      this.words = [0];
       this.length = 1;
       return this;
     }
@@ -45771,30 +45772,38 @@ var Buffer = require("buffer").Buffer;
         }
       }
     }
-    return this.strip();
+    return this._strip();
   };
 
   function parseHex (str, start, end) {
     var r = 0;
     var len = Math.min(str.length, end);
+    var z = 0;
     for (var i = start; i < len; i++) {
       var c = str.charCodeAt(i) - 48;
 
       r <<= 4;
 
+      var b;
+
       // 'a' - 'f'
       if (c >= 49 && c <= 54) {
-        r |= c - 49 + 0xa;
+        b = c - 49 + 0xa;
 
       // 'A' - 'F'
       } else if (c >= 17 && c <= 22) {
-        r |= c - 17 + 0xa;
+        b = c - 17 + 0xa;
 
       // '0' - '9'
       } else {
-        r |= c & 0xf;
+        b = c;
       }
+
+      r |= b;
+      z |= b;
     }
+
+    assert(!(z & 0xf0), 'Invalid character in ' + str);
     return r;
   }
 
@@ -45825,11 +45834,12 @@ var Buffer = require("buffer").Buffer;
       this.words[j] |= (w << off) & 0x3ffffff;
       this.words[j + 1] |= w >>> (26 - off) & 0x3fffff;
     }
-    this.strip();
+    this._strip();
   };
 
   function parseBase (str, start, end, mul) {
     var r = 0;
+    var b = 0;
     var len = Math.min(str.length, end);
     for (var i = start; i < len; i++) {
       var c = str.charCodeAt(i) - 48;
@@ -45838,23 +45848,25 @@ var Buffer = require("buffer").Buffer;
 
       // 'a'
       if (c >= 49) {
-        r += c - 49 + 0xa;
+        b = c - 49 + 0xa;
 
       // 'A'
       } else if (c >= 17) {
-        r += c - 17 + 0xa;
+        b = c - 17 + 0xa;
 
       // '0' - '9'
       } else {
-        r += c;
+        b = c;
       }
+      assert(c >= 0 && b < mul, 'Invalid character');
+      r += b;
     }
     return r;
   }
 
   BN.prototype._parseBase = function _parseBase (number, base, start) {
     // Initialize as zero
-    this.words = [ 0 ];
+    this.words = [0];
     this.length = 1;
 
     // Find length of limb in base
@@ -45907,6 +45919,17 @@ var Buffer = require("buffer").Buffer;
     dest.red = this.red;
   };
 
+  function move (dest, src) {
+    dest.words = src.words;
+    dest.length = src.length;
+    dest.negative = src.negative;
+    dest.red = src.red;
+  }
+
+  BN.prototype._move = function _move (dest) {
+    move(dest, this);
+  };
+
   BN.prototype.clone = function clone () {
     var r = new BN(null);
     this.copy(r);
@@ -45921,7 +45944,7 @@ var Buffer = require("buffer").Buffer;
   };
 
   // Remove leading `0` from `this`
-  BN.prototype.strip = function strip () {
+  BN.prototype._strip = function strip () {
     while (this.length > 1 && this.words[this.length - 1] === 0) {
       this.length--;
     }
@@ -45936,9 +45959,17 @@ var Buffer = require("buffer").Buffer;
     return this;
   };
 
-  BN.prototype.inspect = function inspect () {
+  // Check Symbol.for because not everywhere where Symbol defined
+  // See https://developer.mozilla.org/en-US/docs/Web/JavaScript/Reference/Global_Objects/Symbol#Browser_compatibility
+  if (typeof Symbol !== 'undefined' && typeof Symbol.for === 'function') {
+    BN.prototype[Symbol.for('nodejs.util.inspect.custom')] = inspect;
+  } else {
+    BN.prototype.inspect = inspect;
+  }
+
+  function inspect () {
     return (this.red ? '<BN-R: ' : '<BN: ') + this.toString(16) + '>';
-  };
+  }
 
   /*
 
@@ -46062,7 +46093,7 @@ var Buffer = require("buffer").Buffer;
       var c = this.clone();
       c.negative = 0;
       while (!c.isZero()) {
-        var r = c.modn(groupBase).toString(base);
+        var r = c.modrn(groupBase).toString(base);
         c = c.idivn(groupBase);
 
         if (!c.isZero()) {
@@ -46100,56 +46131,110 @@ var Buffer = require("buffer").Buffer;
   };
 
   BN.prototype.toJSON = function toJSON () {
-    return this.toString(16);
+    return this.toString(16, 2);
   };
 
-  BN.prototype.toBuffer = function toBuffer (endian, length) {
-    assert(typeof Buffer !== 'undefined');
-    return this.toArrayLike(Buffer, endian, length);
-  };
+  if (Buffer) {
+    BN.prototype.toBuffer = function toBuffer (endian, length) {
+      return this.toArrayLike(Buffer, endian, length);
+    };
+  }
 
   BN.prototype.toArray = function toArray (endian, length) {
     return this.toArrayLike(Array, endian, length);
   };
 
+  var allocate = function allocate (ArrayType, size) {
+    if (ArrayType.allocUnsafe) {
+      return ArrayType.allocUnsafe(size);
+    }
+    return new ArrayType(size);
+  };
+
   BN.prototype.toArrayLike = function toArrayLike (ArrayType, endian, length) {
+    this._strip();
+
     var byteLength = this.byteLength();
     var reqLength = length || Math.max(1, byteLength);
     assert(byteLength <= reqLength, 'byte array longer than desired length');
     assert(reqLength > 0, 'Requested array length <= 0');
 
-    this.strip();
-    var littleEndian = endian === 'le';
-    var res = new ArrayType(reqLength);
+    var res = allocate(ArrayType, reqLength);
+    var postfix = endian === 'le' ? 'LE' : 'BE';
+    this['_toArrayLike' + postfix](res, byteLength);
+    return res;
+  };
 
-    var b, i;
-    var q = this.clone();
-    if (!littleEndian) {
-      // Assume big-endian
-      for (i = 0; i < reqLength - byteLength; i++) {
-        res[i] = 0;
+  BN.prototype._toArrayLikeLE = function _toArrayLikeLE (res, byteLength) {
+    var position = 0;
+    var carry = 0;
+
+    for (var i = 0, shift = 0; i < this.length; i++) {
+      var word = (this.words[i] << shift) | carry;
+
+      res[position++] = word & 0xff;
+      if (position < res.length) {
+        res[position++] = (word >> 8) & 0xff;
+      }
+      if (position < res.length) {
+        res[position++] = (word >> 16) & 0xff;
       }
 
-      for (i = 0; !q.isZero(); i++) {
-        b = q.andln(0xff);
-        q.iushrn(8);
-
-        res[reqLength - i - 1] = b;
-      }
-    } else {
-      for (i = 0; !q.isZero(); i++) {
-        b = q.andln(0xff);
-        q.iushrn(8);
-
-        res[i] = b;
-      }
-
-      for (; i < reqLength; i++) {
-        res[i] = 0;
+      if (shift === 6) {
+        if (position < res.length) {
+          res[position++] = (word >> 24) & 0xff;
+        }
+        carry = 0;
+        shift = 0;
+      } else {
+        carry = word >>> 24;
+        shift += 2;
       }
     }
 
-    return res;
+    if (position < res.length) {
+      res[position++] = carry;
+
+      while (position < res.length) {
+        res[position++] = 0;
+      }
+    }
+  };
+
+  BN.prototype._toArrayLikeBE = function _toArrayLikeBE (res, byteLength) {
+    var position = res.length - 1;
+    var carry = 0;
+
+    for (var i = 0, shift = 0; i < this.length; i++) {
+      var word = (this.words[i] << shift) | carry;
+
+      res[position--] = word & 0xff;
+      if (position >= 0) {
+        res[position--] = (word >> 8) & 0xff;
+      }
+      if (position >= 0) {
+        res[position--] = (word >> 16) & 0xff;
+      }
+
+      if (shift === 6) {
+        if (position >= 0) {
+          res[position--] = (word >> 24) & 0xff;
+        }
+        carry = 0;
+        shift = 0;
+      } else {
+        carry = word >>> 24;
+        shift += 2;
+      }
+    }
+
+    if (position >= 0) {
+      res[position--] = carry;
+
+      while (position >= 0) {
+        res[position--] = 0;
+      }
+    }
   };
 
   if (Math.clz32) {
@@ -46222,7 +46307,7 @@ var Buffer = require("buffer").Buffer;
       var off = (bit / 26) | 0;
       var wbit = bit % 26;
 
-      w[bit] = (num.words[off] & (1 << wbit)) >>> wbit;
+      w[bit] = (num.words[off] >>> wbit) & 0x01;
     }
 
     return w;
@@ -46286,7 +46371,7 @@ var Buffer = require("buffer").Buffer;
       this.words[i] = this.words[i] | num.words[i];
     }
 
-    return this.strip();
+    return this._strip();
   };
 
   BN.prototype.ior = function ior (num) {
@@ -46321,7 +46406,7 @@ var Buffer = require("buffer").Buffer;
 
     this.length = b.length;
 
-    return this.strip();
+    return this._strip();
   };
 
   BN.prototype.iand = function iand (num) {
@@ -46365,7 +46450,7 @@ var Buffer = require("buffer").Buffer;
 
     this.length = a.length;
 
-    return this.strip();
+    return this._strip();
   };
 
   BN.prototype.ixor = function ixor (num) {
@@ -46409,7 +46494,7 @@ var Buffer = require("buffer").Buffer;
     }
 
     // And remove leading zeroes
-    return this.strip();
+    return this._strip();
   };
 
   BN.prototype.notn = function notn (width) {
@@ -46431,7 +46516,7 @@ var Buffer = require("buffer").Buffer;
       this.words[off] = this.words[off] & ~(1 << wbit);
     }
 
-    return this.strip();
+    return this._strip();
   };
 
   // Add `num` to `this` in-place
@@ -46572,7 +46657,7 @@ var Buffer = require("buffer").Buffer;
       this.negative = 1;
     }
 
-    return this.strip();
+    return this._strip();
   };
 
   // Subtract `num` from `this`
@@ -46618,7 +46703,7 @@ var Buffer = require("buffer").Buffer;
       out.length--;
     }
 
-    return out.strip();
+    return out._strip();
   }
 
   // TODO(indutny): it may be reasonable to omit it for users who don't need
@@ -47240,12 +47325,14 @@ var Buffer = require("buffer").Buffer;
       out.length--;
     }
 
-    return out.strip();
+    return out._strip();
   }
 
   function jumboMulTo (self, num, out) {
-    var fftm = new FFTM();
-    return fftm.mulp(self, num, out);
+    // Temporary disable, see https://github.com/indutny/bn.js/issues/211
+    // var fftm = new FFTM();
+    // return fftm.mulp(self, num, out);
+    return bigMulTo(self, num, out);
   }
 
   BN.prototype.mulTo = function mulTo (num, out) {
@@ -47457,7 +47544,7 @@ var Buffer = require("buffer").Buffer;
 
     out.negative = x.negative ^ y.negative;
     out.length = x.length + y.length;
-    return out.strip();
+    return out._strip();
   };
 
   // Multiply `this` by `num`
@@ -47480,6 +47567,9 @@ var Buffer = require("buffer").Buffer;
   };
 
   BN.prototype.imuln = function imuln (num) {
+    var isNegNum = num < 0;
+    if (isNegNum) num = -num;
+
     assert(typeof num === 'number');
     assert(num < 0x4000000);
 
@@ -47500,7 +47590,7 @@ var Buffer = require("buffer").Buffer;
       this.length++;
     }
 
-    return this;
+    return isNegNum ? this.ineg() : this;
   };
 
   BN.prototype.muln = function muln (num) {
@@ -47575,7 +47665,7 @@ var Buffer = require("buffer").Buffer;
       this.length += s;
     }
 
-    return this.strip();
+    return this._strip();
   };
 
   BN.prototype.ishln = function ishln (bits) {
@@ -47641,7 +47731,7 @@ var Buffer = require("buffer").Buffer;
       this.length = 1;
     }
 
-    return this.strip();
+    return this._strip();
   };
 
   BN.prototype.ishrn = function ishrn (bits, hint, extended) {
@@ -47706,7 +47796,7 @@ var Buffer = require("buffer").Buffer;
       this.words[this.length - 1] &= mask;
     }
 
-    return this.strip();
+    return this._strip();
   };
 
   // Return only lowers bits of number
@@ -47722,7 +47812,7 @@ var Buffer = require("buffer").Buffer;
 
     // Possible sign change
     if (this.negative !== 0) {
-      if (this.length === 1 && (this.words[0] | 0) < num) {
+      if (this.length === 1 && (this.words[0] | 0) <= num) {
         this.words[0] = num - (this.words[0] | 0);
         this.negative = 0;
         return this;
@@ -47781,7 +47871,7 @@ var Buffer = require("buffer").Buffer;
       }
     }
 
-    return this.strip();
+    return this._strip();
   };
 
   BN.prototype.addn = function addn (num) {
@@ -47823,7 +47913,7 @@ var Buffer = require("buffer").Buffer;
       this.words[i + shift] = w & 0x3ffffff;
     }
 
-    if (carry === 0) return this.strip();
+    if (carry === 0) return this._strip();
 
     // Subtraction overflow
     assert(carry === -1);
@@ -47835,7 +47925,7 @@ var Buffer = require("buffer").Buffer;
     }
     this.negative = 1;
 
-    return this.strip();
+    return this._strip();
   };
 
   BN.prototype._wordDiv = function _wordDiv (num, mode) {
@@ -47897,9 +47987,9 @@ var Buffer = require("buffer").Buffer;
       }
     }
     if (q) {
-      q.strip();
+      q._strip();
     }
-    a.strip();
+    a._strip();
 
     // Denormalize
     if (mode !== 'div' && shift !== 0) {
@@ -47998,13 +48088,13 @@ var Buffer = require("buffer").Buffer;
       if (mode === 'mod') {
         return {
           div: null,
-          mod: new BN(this.modn(num.words[0]))
+          mod: new BN(this.modrn(num.words[0]))
         };
       }
 
       return {
         div: this.divn(num.words[0]),
-        mod: new BN(this.modn(num.words[0]))
+        mod: new BN(this.modrn(num.words[0]))
       };
     }
 
@@ -48039,13 +48129,16 @@ var Buffer = require("buffer").Buffer;
     var cmp = mod.cmp(half);
 
     // Round down
-    if (cmp < 0 || r2 === 1 && cmp === 0) return dm.div;
+    if (cmp < 0 || (r2 === 1 && cmp === 0)) return dm.div;
 
     // Round up
     return dm.div.negative !== 0 ? dm.div.isubn(1) : dm.div.iaddn(1);
   };
 
-  BN.prototype.modn = function modn (num) {
+  BN.prototype.modrn = function modrn (num) {
+    var isNegNum = num < 0;
+    if (isNegNum) num = -num;
+
     assert(num <= 0x3ffffff);
     var p = (1 << 26) % num;
 
@@ -48054,11 +48147,19 @@ var Buffer = require("buffer").Buffer;
       acc = (p * acc + (this.words[i] | 0)) % num;
     }
 
-    return acc;
+    return isNegNum ? -acc : acc;
+  };
+
+  // WARNING: DEPRECATED
+  BN.prototype.modn = function modn (num) {
+    return this.modrn(num);
   };
 
   // In-place division by number
   BN.prototype.idivn = function idivn (num) {
+    var isNegNum = num < 0;
+    if (isNegNum) num = -num;
+
     assert(num <= 0x3ffffff);
 
     var carry = 0;
@@ -48068,7 +48169,8 @@ var Buffer = require("buffer").Buffer;
       carry = w % num;
     }
 
-    return this.strip();
+    this._strip();
+    return isNegNum ? this.ineg() : this;
   };
 
   BN.prototype.divn = function divn (num) {
@@ -48320,7 +48422,7 @@ var Buffer = require("buffer").Buffer;
     if (this.negative !== 0 && !negative) return -1;
     if (this.negative === 0 && negative) return 1;
 
-    this.strip();
+    this._strip();
 
     var res;
     if (this.length > 1) {
@@ -48563,7 +48665,7 @@ var Buffer = require("buffer").Buffer;
     } else if (cmp > 0) {
       r.isub(this.p);
     } else {
-      r.strip();
+      r._strip();
     }
 
     return r;
@@ -48736,7 +48838,9 @@ var Buffer = require("buffer").Buffer;
 
   Red.prototype.imod = function imod (a) {
     if (this.prime) return this.prime.ireduce(a)._forceRed(this);
-    return a.umod(this.m)._forceRed(this);
+
+    move(a, a.umod(this.m)._forceRed(this));
+    return a;
   };
 
   Red.prototype.neg = function neg (a) {
@@ -49991,7 +50095,7 @@ function deserialize(schema, classType, buffer) {
 }
 exports.deserialize = deserialize;
 
-},{"bs58":"../node_modules/bs58/index.js","bn.js":"../node_modules/bn.js/lib/bn.js","text-encoding-utf-8":"../node_modules/text-encoding-utf-8/lib/encoding.lib.js","buffer":"../node_modules/buffer/index.js"}],"../node_modules/mustache/mustache.js":[function(require,module,exports) {
+},{"bs58":"../node_modules/bs58/index.js","bn.js":"../node_modules/near-api-js/node_modules/bn.js/lib/bn.js","text-encoding-utf-8":"../node_modules/text-encoding-utf-8/lib/encoding.lib.js","buffer":"../node_modules/buffer/index.js"}],"../node_modules/mustache/mustache.js":[function(require,module,exports) {
 var define;
 var global = arguments[3];
 // This file has been generated from mustache.mjs
@@ -54627,7 +54731,7 @@ function formatWithCommas(value) {
     return value;
 }
 
-},{"bn.js":"../node_modules/bn.js/lib/bn.js"}],"../node_modules/near-api-js/lib/utils/index.js":[function(require,module,exports) {
+},{"bn.js":"../node_modules/near-api-js/node_modules/bn.js/lib/bn.js"}],"../node_modules/near-api-js/lib/utils/index.js":[function(require,module,exports) {
 "use strict";
 var __importStar = (this && this.__importStar) || function (mod) {
     if (mod && mod.__esModule) return mod;
@@ -55969,7 +56073,7 @@ class Account {
 }
 exports.Account = Account;
 
-},{"bn.js":"../node_modules/bn.js/lib/bn.js","./transaction":"../node_modules/near-api-js/lib/transaction.js","./providers":"../node_modules/near-api-js/lib/providers/index.js","./utils/serialize":"../node_modules/near-api-js/lib/utils/serialize.js","./utils/key_pair":"../node_modules/near-api-js/lib/utils/key_pair.js","./utils/errors":"../node_modules/near-api-js/lib/utils/errors.js","./utils/rpc_errors":"../node_modules/near-api-js/lib/utils/rpc_errors.js","buffer":"../node_modules/buffer/index.js"}],"../node_modules/near-api-js/lib/account_creator.js":[function(require,module,exports) {
+},{"bn.js":"../node_modules/near-api-js/node_modules/bn.js/lib/bn.js","./transaction":"../node_modules/near-api-js/lib/transaction.js","./providers":"../node_modules/near-api-js/lib/providers/index.js","./utils/serialize":"../node_modules/near-api-js/lib/utils/serialize.js","./utils/key_pair":"../node_modules/near-api-js/lib/utils/key_pair.js","./utils/errors":"../node_modules/near-api-js/lib/utils/errors.js","./utils/rpc_errors":"../node_modules/near-api-js/lib/utils/rpc_errors.js","buffer":"../node_modules/buffer/index.js"}],"../node_modules/near-api-js/lib/account_creator.js":[function(require,module,exports) {
 "use strict";
 Object.defineProperty(exports, "__esModule", { value: true });
 const web_1 = require("./utils/web");
@@ -56193,7 +56297,7 @@ function validateBNLike(argMap) {
     }
 }
 
-},{"bn.js":"../node_modules/bn.js/lib/bn.js","./providers":"../node_modules/near-api-js/lib/providers/index.js","./utils/errors":"../node_modules/near-api-js/lib/utils/errors.js"}],"../node_modules/util/support/isBufferBrowser.js":[function(require,module,exports) {
+},{"bn.js":"../node_modules/near-api-js/node_modules/bn.js/lib/bn.js","./providers":"../node_modules/near-api-js/lib/providers/index.js","./utils/errors":"../node_modules/near-api-js/lib/utils/errors.js"}],"../node_modules/util/support/isBufferBrowser.js":[function(require,module,exports) {
 module.exports = function isBuffer(arg) {
   return arg && typeof arg === 'object'
     && typeof arg.copy === 'function'
@@ -57197,7 +57301,7 @@ async function connect(config) {
 }
 exports.connect = connect;
 
-},{"bn.js":"../node_modules/bn.js/lib/bn.js","./account":"../node_modules/near-api-js/lib/account.js","./connection":"../node_modules/near-api-js/lib/connection.js","./contract":"../node_modules/near-api-js/lib/contract.js","./key_stores/unencrypted_file_system_keystore":"../node_modules/near-api-js/lib/key_stores/unencrypted_file_system_keystore.js","./account_creator":"../node_modules/near-api-js/lib/account_creator.js","./key_stores":"../node_modules/near-api-js/lib/key_stores/index.js"}],"../node_modules/near-api-js/lib/wallet-account.js":[function(require,module,exports) {
+},{"bn.js":"../node_modules/near-api-js/node_modules/bn.js/lib/bn.js","./account":"../node_modules/near-api-js/lib/account.js","./connection":"../node_modules/near-api-js/lib/connection.js","./contract":"../node_modules/near-api-js/lib/contract.js","./key_stores/unencrypted_file_system_keystore":"../node_modules/near-api-js/lib/key_stores/unencrypted_file_system_keystore.js","./account_creator":"../node_modules/near-api-js/lib/account_creator.js","./key_stores":"../node_modules/near-api-js/lib/key_stores/index.js"}],"../node_modules/near-api-js/lib/wallet-account.js":[function(require,module,exports) {
 var Buffer = require("buffer").Buffer;
 "use strict";
 Object.defineProperty(exports, "__esModule", { value: true });
@@ -57549,15 +57653,17 @@ var _default = ({
   const balance = currentUser ? /*#__PURE__*/_react.default.createElement(_Balance.default, {
     amount: currentUser.balance
   }) : null;
+  const accountId = currentUser ? currentUser.accountId : null;
   return /*#__PURE__*/_react.default.createElement("header", {
     className: "Toolbar"
   }, /*#__PURE__*/_react.default.createElement(_DrawerToggle.default, {
     clicked: drawerToggleClicked
   }), /*#__PURE__*/_react.default.createElement("div", {
+    className: "DesktopOnly",
     style: {
       height: "80%"
     }
-  }, /*#__PURE__*/_react.default.createElement(_Logo.default, null)), isAuth ? /*#__PURE__*/_react.default.createElement("p", null, "Hi ", /*#__PURE__*/_react.default.createElement("i", null, currentUser.accountId), " Balance: ", balance) : null, /*#__PURE__*/_react.default.createElement("nav", {
+  }, /*#__PURE__*/_react.default.createElement(_Logo.default, null)), isAuth ? /*#__PURE__*/_react.default.createElement("p", null, "Hi ", /*#__PURE__*/_react.default.createElement("i", null, accountId), " Balance: ", balance) : null, /*#__PURE__*/_react.default.createElement("nav", {
     className: "DesktopOnly"
   }, /*#__PURE__*/_react.default.createElement(_NavigationItems.default, {
     isAuthenticated: isAuth
@@ -57634,29 +57740,33 @@ var _NavigationItems = _interopRequireDefault(require("../NavigationItems/Naviga
 
 var _Backdrop = _interopRequireDefault(require("../../Utils/Backdrop"));
 
+var _Balance = _interopRequireDefault(require("../../Utils/Balance"));
+
 function _interopRequireDefault(obj) { return obj && obj.__esModule ? obj : { default: obj }; }
 
 var _default = ({
   open,
   closed,
   isAuth
-}) => /*#__PURE__*/_react.default.createElement(_react.default.Fragment, null, /*#__PURE__*/_react.default.createElement(_Backdrop.default, {
-  show: open,
-  clicked: closed
-}), /*#__PURE__*/_react.default.createElement("div", {
-  className: "SideDrawer",
-  style: {
-    transform: open ? "translateX(0)" : " translateX(-100%)"
-  },
-  onClick: closed
-}, /*#__PURE__*/_react.default.createElement("div", {
-  style: {
-    height: "20%",
-    marginBottom: "10px"
-  }
-}, /*#__PURE__*/_react.default.createElement(_Logo.default, null)), /*#__PURE__*/_react.default.createElement("nav", null, /*#__PURE__*/_react.default.createElement(_NavigationItems.default, {
-  isAuthenticated: isAuth
-}))), /*#__PURE__*/_react.default.createElement("style", null, `
+}) => {
+  return /*#__PURE__*/_react.default.createElement(_react.default.Fragment, null, /*#__PURE__*/_react.default.createElement(_Backdrop.default, {
+    show: open,
+    clicked: closed
+  }), /*#__PURE__*/_react.default.createElement("div", {
+    className: "SideDrawer",
+    style: {
+      transform: open ? "translateX(0)" : " translateX(-100%)"
+    },
+    onClick: closed
+  }, /*#__PURE__*/_react.default.createElement("div", {
+    style: {
+      height: "20%",
+      marginBottom: "10px",
+      marginTop: "30px"
+    }
+  }, /*#__PURE__*/_react.default.createElement(_Logo.default, null)), /*#__PURE__*/_react.default.createElement("nav", null, /*#__PURE__*/_react.default.createElement(_NavigationItems.default, {
+    isAuthenticated: isAuth
+  }))), /*#__PURE__*/_react.default.createElement("style", null, `
         .SideDrawer {
           position: fixed;
           width: 280px;
@@ -57677,9 +57787,10 @@ var _default = ({
           }
       }
     `));
+};
 
 exports.default = _default;
-},{"react":"../node_modules/react/index.js","../../Logo/Logo":"components/Logo/Logo.js","../NavigationItems/NavigationItems":"components/Navigation/NavigationItems/NavigationItems.js","../../Utils/Backdrop":"components/Utils/Backdrop.js"}],"components/Utils/hoc/Layout.js":[function(require,module,exports) {
+},{"react":"../node_modules/react/index.js","../../Logo/Logo":"components/Logo/Logo.js","../NavigationItems/NavigationItems":"components/Navigation/NavigationItems/NavigationItems.js","../../Utils/Backdrop":"components/Utils/Backdrop.js","../../Utils/Balance":"components/Utils/Balance.js"}],"components/Utils/Layout.js":[function(require,module,exports) {
 "use strict";
 
 Object.defineProperty(exports, "__esModule", {
@@ -57691,9 +57802,9 @@ var _react = _interopRequireWildcard(require("react"));
 
 var _reactRedux = require("react-redux");
 
-var _Toolbar = _interopRequireDefault(require("../../Navigation/Toolbar/Toolbar"));
+var _Toolbar = _interopRequireDefault(require("../Navigation/Toolbar/Toolbar"));
 
-var _SideDrawer = _interopRequireDefault(require("../../Navigation/SideDrawer/SideDrawer"));
+var _SideDrawer = _interopRequireDefault(require("../Navigation/SideDrawer/SideDrawer"));
 
 function _interopRequireDefault(obj) { return obj && obj.__esModule ? obj : { default: obj }; }
 
@@ -57754,7 +57865,7 @@ const mapStateToProps = state => {
 var _default = (0, _reactRedux.connect)(mapStateToProps)(Layout);
 
 exports.default = _default;
-},{"react":"../node_modules/react/index.js","react-redux":"../node_modules/react-redux/es/index.js","../../Navigation/Toolbar/Toolbar":"components/Navigation/Toolbar/Toolbar.js","../../Navigation/SideDrawer/SideDrawer":"components/Navigation/SideDrawer/SideDrawer.js"}],"components/iceCream/Box/Box.js":[function(require,module,exports) {
+},{"react":"../node_modules/react/index.js","react-redux":"../node_modules/react-redux/es/index.js","../Navigation/Toolbar/Toolbar":"components/Navigation/Toolbar/Toolbar.js","../Navigation/SideDrawer/SideDrawer":"components/Navigation/SideDrawer/SideDrawer.js"}],"components/iceCream/Box/Box.js":[function(require,module,exports) {
 "use strict";
 
 Object.defineProperty(exports, "__esModule", {
@@ -59966,7 +60077,9 @@ const mapDispatchToProps = dispatch => {
 var _default = (0, _reactRedux.connect)(mapStateToProps, mapDispatchToProps)(iceCreamBuilder);
 
 exports.default = _default;
-},{"react":"../node_modules/react/index.js","react-redux":"../node_modules/react-redux/es/index.js","../../store/actions/index":"store/actions/index.js","../../components/iceCream/iceCream":"components/iceCream/iceCream.js","../../components/iceCream/BuildControls/BuildControls":"components/iceCream/BuildControls/BuildControls.js","react-router-dom":"../node_modules/react-router-dom/esm/react-router-dom.js"}],"containers/Auth/Logout/Logout.js":[function(require,module,exports) {
+},{"react":"../node_modules/react/index.js","react-redux":"../node_modules/react-redux/es/index.js","../../store/actions/index":"store/actions/index.js","../../components/iceCream/iceCream":"components/iceCream/iceCream.js","../../components/iceCream/BuildControls/BuildControls":"components/iceCream/BuildControls/BuildControls.js","react-router-dom":"../node_modules/react-router-dom/esm/react-router-dom.js"}],"assets/heart_cup.png":[function(require,module,exports) {
+module.exports = "/heart_cup.6e4f03ee.png";
+},{}],"containers/Auth/Logout/Logout.js":[function(require,module,exports) {
 "use strict";
 
 Object.defineProperty(exports, "__esModule", {
@@ -59983,6 +60096,8 @@ var _reactRedux = require("react-redux");
 var actions = _interopRequireWildcard(require("../../../store/actions/index"));
 
 var _Button = _interopRequireDefault(require("../../../components/Utils/Button"));
+
+var _heart_cup = _interopRequireDefault(require("../../../assets/heart_cup.png"));
 
 function _interopRequireDefault(obj) { return obj && obj.__esModule ? obj : { default: obj }; }
 
@@ -60014,9 +60129,24 @@ class Logout extends _react.Component {
   }
 
   render() {
-    return /*#__PURE__*/_react.default.createElement(_Button.default, {
+    return /*#__PURE__*/_react.default.createElement("div", {
+      className: "Auth"
+    }, /*#__PURE__*/_react.default.createElement("img", {
+      src: _heart_cup.default
+    }), /*#__PURE__*/_react.default.createElement(_Button.default, {
       clicked: this.requestSignOut
-    }, "Log Out");
+    }, "Log Out"), /*#__PURE__*/_react.default.createElement("style", null, `
+          .Auth {
+              margin:auto;
+              text-align: center;
+              width: 700px;
+          }
+
+          .Auth img {
+            width: 700px;
+            max-width: 90%;
+          }
+        `));
   }
 
 }
@@ -60030,7 +60160,9 @@ const mapDispatchToProps = dispatch => {
 var _default = (0, _reactRedux.connect)(null, mapDispatchToProps)(Logout);
 
 exports.default = _default;
-},{"react":"../node_modules/react/index.js","react-router-dom":"../node_modules/react-router-dom/esm/react-router-dom.js","react-redux":"../node_modules/react-redux/es/index.js","../../../store/actions/index":"store/actions/index.js","../../../components/Utils/Button":"components/Utils/Button.js"}],"containers/Auth/Auth.js":[function(require,module,exports) {
+},{"react":"../node_modules/react/index.js","react-router-dom":"../node_modules/react-router-dom/esm/react-router-dom.js","react-redux":"../node_modules/react-redux/es/index.js","../../../store/actions/index":"store/actions/index.js","../../../components/Utils/Button":"components/Utils/Button.js","../../../assets/heart_cup.png":"assets/heart_cup.png"}],"assets/heart_balloon.png":[function(require,module,exports) {
+module.exports = "/heart_balloon.ac1fb44a.png";
+},{}],"containers/Auth/Auth.js":[function(require,module,exports) {
 "use strict";
 
 Object.defineProperty(exports, "__esModule", {
@@ -60047,6 +60179,8 @@ var _reactRouterDom = require("react-router-dom");
 var actions = _interopRequireWildcard(require("../../store/actions/index"));
 
 var _Button = _interopRequireDefault(require("../../components/Utils/Button"));
+
+var _heart_balloon = _interopRequireDefault(require("../../assets/heart_balloon.png"));
 
 function _interopRequireDefault(obj) { return obj && obj.__esModule ? obj : { default: obj }; }
 
@@ -60084,24 +60218,24 @@ class Auth extends _react.Component {
       });
     }
 
-    return /*#__PURE__*/_react.default.createElement(_Button.default, {
+    return /*#__PURE__*/_react.default.createElement("div", {
+      className: "Auth"
+    }, /*#__PURE__*/_react.default.createElement("img", {
+      src: _heart_balloon.default
+    }), /*#__PURE__*/_react.default.createElement(_Button.default, {
       clicked: this.requestSignIn
-    }, "Log In with NEAR Wallet", /*#__PURE__*/_react.default.createElement("style", null, `
-      .Auth {
-        margin: 20px auto;
-        width: 80%;
-        text-align: center;
-        box-shadow: 0 2px 3px #ccc;
-        border: 1px solid #eee;
-        padding: 10px;
-        box-sizing: border-box;
-    }
-    
-    @media (min-width: 600px) {
-        .Auth {
-            width: 500px;
-        }
-    }`));
+    }, "Log In with NEAR Wallet"), /*#__PURE__*/_react.default.createElement("style", null, `
+          .Auth {
+              margin:auto;
+              text-align: center;
+              width: 700px;
+          }
+
+          .Auth img {
+            width: 700px;
+            max-width: 90%;
+          }
+        `));
   }
 
 }
@@ -60122,7 +60256,7 @@ const mapDispatchToProps = dispatch => {
 var _default = (0, _reactRedux.connect)(mapStateToProps, mapDispatchToProps)(Auth);
 
 exports.default = _default;
-},{"react":"../node_modules/react/index.js","react-redux":"../node_modules/react-redux/es/index.js","react-router-dom":"../node_modules/react-router-dom/esm/react-router-dom.js","../../store/actions/index":"store/actions/index.js","../../components/Utils/Button":"components/Utils/Button.js"}],"components/Utils/Spinner.js":[function(require,module,exports) {
+},{"react":"../node_modules/react/index.js","react-redux":"../node_modules/react-redux/es/index.js","react-router-dom":"../node_modules/react-router-dom/esm/react-router-dom.js","../../store/actions/index":"store/actions/index.js","../../components/Utils/Button":"components/Utils/Button.js","../../assets/heart_balloon.png":"assets/heart_balloon.png"}],"components/Utils/Spinner.js":[function(require,module,exports) {
 "use strict";
 
 Object.defineProperty(exports, "__esModule", {
@@ -60449,7 +60583,7 @@ var _reactRedux = require("react-redux");
 
 var actions = _interopRequireWildcard(require("./store/actions/index"));
 
-var _Layout = _interopRequireDefault(require("./components/Utils/hoc/Layout"));
+var _Layout = _interopRequireDefault(require("./components/Utils/Layout"));
 
 var _iceCreamBuilder = _interopRequireDefault(require("./containers/iceCreamBuilder/iceCreamBuilder"));
 
@@ -60526,7 +60660,7 @@ const mapDispatchToProps = dispatch => {
 var _default = (0, _reactRedux.connect)(mapStateToProps, mapDispatchToProps)(App);
 
 exports.default = _default;
-},{"regenerator-runtime/runtime":"../node_modules/regenerator-runtime/runtime.js","react":"../node_modules/react/index.js","react-router-dom":"../node_modules/react-router-dom/esm/react-router-dom.js","react-redux":"../node_modules/react-redux/es/index.js","./store/actions/index":"store/actions/index.js","./components/Utils/hoc/Layout":"components/Utils/hoc/Layout.js","./containers/iceCreamBuilder/iceCreamBuilder":"containers/iceCreamBuilder/iceCreamBuilder.js","./containers/Auth/Logout/Logout":"containers/Auth/Logout/Logout.js","./containers/Auth/Auth":"containers/Auth/Auth.js","./containers/Checkout/Checkout":"containers/Checkout/Checkout.js","./containers/Orders/Orders":"containers/Orders/Orders.js"}],"store/shared/utility.js":[function(require,module,exports) {
+},{"regenerator-runtime/runtime":"../node_modules/regenerator-runtime/runtime.js","react":"../node_modules/react/index.js","react-router-dom":"../node_modules/react-router-dom/esm/react-router-dom.js","react-redux":"../node_modules/react-redux/es/index.js","./store/actions/index":"store/actions/index.js","./components/Utils/Layout":"components/Utils/Layout.js","./containers/iceCreamBuilder/iceCreamBuilder":"containers/iceCreamBuilder/iceCreamBuilder.js","./containers/Auth/Logout/Logout":"containers/Auth/Logout/Logout.js","./containers/Auth/Auth":"containers/Auth/Auth.js","./containers/Checkout/Checkout":"containers/Checkout/Checkout.js","./containers/Orders/Orders":"containers/Orders/Orders.js"}],"store/shared/utility.js":[function(require,module,exports) {
 "use strict";
 
 Object.defineProperty(exports, "__esModule", {
@@ -60779,7 +60913,7 @@ const reducer = (state = initialState, action) => {
 var _default = reducer;
 exports.default = _default;
 },{"../actions/actionTypes":"store/actions/actionTypes.js","../shared/utility":"store/shared/utility.js"}],"config.js":[function(require,module,exports) {
-const CONTRACT_NAME = undefined || "dev-1588979200444";
+const CONTRACT_NAME = undefined || "near-icecream.testnet";
 
 function getConfig(env) {
   switch (env) {
@@ -60964,7 +61098,7 @@ var parent = module.bundle.parent;
 if ((!parent || !parent.isParcelRequire) && typeof WebSocket !== 'undefined') {
   var hostname = "" || location.hostname;
   var protocol = location.protocol === 'https:' ? 'wss' : 'ws';
-  var ws = new WebSocket(protocol + '://' + hostname + ':' + "54974" + '/');
+  var ws = new WebSocket(protocol + '://' + hostname + ':' + "57609" + '/');
 
   ws.onmessage = function (event) {
     checkedAssets = {};

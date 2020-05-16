@@ -16,6 +16,7 @@ export default ({ clicked }) => (
             padding: 10px 0;
             box-sizing: border-box;
             cursor: pointer;
+            margin-right: 10px;
         }
         
         .DrawerToggle div {

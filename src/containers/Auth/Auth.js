@@ -5,6 +5,7 @@ import { Redirect } from "react-router-dom";
 import * as actions from "../../store/actions/index";
 
 import Button from "../../components/Utils/Button";
+import balloon from "../../assets/heart_balloon.png";
 class Auth extends Component {
   componentDidMount() {
     if (window.wallet.isSignedIn()) {
@@ -29,25 +30,22 @@ class Auth extends Component {
     }
 
     return (
-      <Button clicked={this.requestSignIn}>
-        Log In with NEAR Wallet
+      <div className="Auth">
+        <img src={balloon} />
+        <Button clicked={this.requestSignIn}>Log In with NEAR Wallet</Button>
         <style>{`
-      .Auth {
-        margin: 20px auto;
-        width: 80%;
-        text-align: center;
-        box-shadow: 0 2px 3px #ccc;
-        border: 1px solid #eee;
-        padding: 10px;
-        box-sizing: border-box;
-    }
-    
-    @media (min-width: 600px) {
-        .Auth {
-            width: 500px;
-        }
-    }`}</style>
-      </Button>
+          .Auth {
+              margin:auto;
+              text-align: center;
+              width: 700px;
+          }
+
+          .Auth img {
+            width: 700px;
+            max-width: 90%;
+          }
+        `}</style>
+      </div>
     );
   }
 }

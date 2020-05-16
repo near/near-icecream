@@ -3,23 +3,25 @@ import React from "react";
 import Logo from "../../Logo/Logo";
 import NavigationItems from "../NavigationItems/NavigationItems";
 import Backdrop from "../../Utils/Backdrop";
+import Balance from "../../Utils/Balance";
 
-export default ({ open, closed, isAuth }) => (
-  <>
-    <Backdrop show={open} clicked={closed} />
-    <div
-      className="SideDrawer"
-      style={{ transform: open ? "translateX(0)" : " translateX(-100%)" }}
-      onClick={closed}
-    >
-      <div style={{ height: "20%", marginBottom: "10px" }}>
-        <Logo />
+export default ({ open, closed, isAuth }) => {
+  return (
+    <>
+      <Backdrop show={open} clicked={closed} />
+      <div
+        className="SideDrawer"
+        style={{ transform: open ? "translateX(0)" : " translateX(-100%)" }}
+        onClick={closed}
+      >
+        <div style={{ height: "20%", marginBottom: "10px", marginTop: "30px" }}>
+          <Logo />
+        </div>
+        <nav>
+          <NavigationItems isAuthenticated={isAuth} />
+        </nav>
       </div>
-      <nav>
-        <NavigationItems isAuthenticated={isAuth} />
-      </nav>
-    </div>
-    <style>{`
+      <style>{`
         .SideDrawer {
           position: fixed;
           width: 280px;
@@ -40,5 +42,6 @@ export default ({ open, closed, isAuth }) => (
           }
       }
     `}</style>
-  </>
-);
+    </>
+  );
+};

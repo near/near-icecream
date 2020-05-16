@@ -8,15 +8,16 @@ import Balance from "../../Utils/Balance";
 
 export default ({ drawerToggleClicked, isAuth, currentUser }) => {
   const balance = currentUser ? <Balance amount={currentUser.balance} /> : null;
+  const accountId = currentUser ? currentUser.accountId : null;
   return (
     <header className="Toolbar">
       <DrawerToggle clicked={drawerToggleClicked} />
-      <div style={{ height: "80%" }}>
+      <div className="DesktopOnly" style={{ height: "80%" }}>
         <Logo />
       </div>
       {isAuth ? (
         <p>
-          Hi <i>{currentUser.accountId}</i> Balance: {balance}
+          Hi <i>{accountId}</i> Balance: {balance}
         </p>
       ) : null}
       <nav className="DesktopOnly">

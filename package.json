@@ -5,7 +5,7 @@
     "build": "npm run build:contract && npm run build:web",
     "build:contract": "node asconfig.js",
     "build:web": "parcel build src/index.html --public-url ./",
-    "dev:deploy:contract": "near dev-deploy",
+    "dev:deploy:contract": "near dev-deploy --init",
     "deploy:contract": "near deploy",
     "deploy": "npm run build && npm run deploy:contract",
     "prestart": "npm run build:contract && npm run dev:deploy:contract",

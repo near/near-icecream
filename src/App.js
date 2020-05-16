@@ -5,7 +5,7 @@ import { Route, Switch, Redirect } from "react-router-dom";
 import { connect } from "react-redux";
 import * as actions from "./store/actions/index";
 
-import Layout from "./components/Utils/hoc/Layout";
+import Layout from "./components/Utils/Layout";
 
 import iceCreamBuilder from "./containers/iceCreamBuilder/iceCreamBuilder";
 import Logout from "./containers/Auth/Logout/Logout";
