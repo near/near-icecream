@@ -9,6 +9,7 @@ import Spinner from "../../components/Utils/Spinner";
 class Orders extends Component {
   componentDidMount() {
     this.props.onFetchOrders(this.props.currentUser.accountId);
+    this.props.onInitPurchase();
   }
 
   render() {
@@ -46,6 +47,7 @@ const mapStateToProps = (state) => {
 const mapDispatchToProps = (dispatch) => {
   return {
     onFetchOrders: (accountId) => dispatch(actions.fetchOrders(accountId)),
+    onInitPurchase: () => dispatch(actions.purchaseInit()),
   };
 };
 
