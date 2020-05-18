@@ -75,14 +75,21 @@ export const setPurchase = (info) => {
 const fetchOrdersSuccess = (orders) => {
   return {
     type: actionTypes.FETCH_ORDERS_SUCCESS,
-    orders: orders,
+    orders,
+  };
+};
+
+const fetchDisplayOrdersSucess = (orders) => {
+  return {
+    type: actionTypes.FETCH_DISPLAY_SUCESS,
+    orders,
   };
 };
 
 const fetchOrdersFail = (error) => {
   return {
     type: actionTypes.FETCH_ORDERS_FAIL,
-    error: error,
+    error,
   };
 };
 
@@ -112,7 +119,7 @@ export const fetchDisplayOrders = () => {
     window.contract
       .displayGolbalOrders()
       .then((orders) => {
-        dispatch(fetchOrdersSuccess(orders));
+        dispatch(fetchDisplayOrdersSucess(orders));
       })
       .catch((err) => {
         dispatch(fetchOrdersFail(err));
