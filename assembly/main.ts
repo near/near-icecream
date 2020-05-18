@@ -15,7 +15,7 @@ const ORDER_LIMIT = 10;
 // generate Hash post number
 const POST_SIZE: u32 = 16;
 
-function generatePostNumber(): string {
+export function generatePostNumber(): string {
   let buf = math.randomBuffer(POST_SIZE);
   let b64 = base64.encode(buf);
   return b64;
