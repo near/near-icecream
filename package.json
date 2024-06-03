@@ -29,7 +29,7 @@
     "react-test-renderer": "^16.13.1"
   },
   "dependencies": {
-    "near-api-js": "^0.24.0",
+    "near-api-js": "^0.45.1",
     "react": "^16.13.1",
     "react-dom": "^16.13.1",
     "react-redux": "^7.2.0",
